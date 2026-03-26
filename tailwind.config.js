@@ -1,9 +1,66 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.{js,jsx}"],
+  content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        wine:       '#5C1A2E',
+        maroon:     '#7B2340',
+        burgundy:   '#8B1A4A',
+        caramel:    '#C47D3E',
+        sandGold:   '#D4A849',
+        champagne:  '#E8D5A3',
+        beige:      '#F5EDD8',
+        olive:      '#6B7A3E',
+        offWhite:   '#FAF7F2',
+        textDark:   '#2C1810',
+        textMid:    '#5A3825',
+        textLight:  '#8B6B52',
+        border:     '#D4B896',
+      },
+      fontFamily: {
+        sans:     ['Inter', 'sans-serif'],
+        display:  ['Playfair Display', 'serif'],
+        arabic:   ['Amiri', 'serif'],
+        cormorant:['Cormorant Garamond', 'serif'],
+        dancing:  ['Dancing Script', 'cursive'],
+        vibes:    ['Great Vibes', 'cursive'],
+      },
+      boxShadow: {
+        'sm':    '0 1px 3px rgba(92,26,46,0.08)',
+        'md':    '0 4px 12px rgba(92,26,46,0.12)',
+        'lg':    '0 8px 24px rgba(92,26,46,0.16)',
+        'xl':    '0 16px 40px rgba(92,26,46,0.20)',
+        'glow':  '0 0 20px rgba(212,168,73,0.25)',
+      },
+      borderRadius: {
+        'sm':  '4px',
+        'md':  '8px',
+        'lg':  '12px',
+        'xl':  '16px',
+        '2xl': '24px',
+      },
+      animation: {
+        'fade-in':    'fadeIn 0.2s ease-out',
+        'slide-up':   'slideUp 0.3s ease-out',
+        'slide-in-r': 'slideInRight 0.3s ease-out',
+        'bar-fill':   'barFill 0.6s ease-out forwards',
+        'shimmer':    'shimmer 1.5s infinite',
+        'float':      'float 3s ease-in-out infinite',
+      },
+      keyframes: {
+        fadeIn:       { from: { opacity: 0 }, to: { opacity: 1 } },
+        slideUp:      { from: { opacity: 0, transform: 'translateY(16px)' }, to: { opacity: 1, transform: 'translateY(0)' } },
+        slideInRight: { from: { opacity: 0, transform: 'translateX(24px)' }, to: { opacity: 1, transform: 'translateX(0)' } },
+        barFill:      { from: { width: '0%' }, to: { width: 'var(--bar-width)' } },
+        shimmer:      { '0%': { backgroundPosition: '-200% 0' }, '100%': { backgroundPosition: '200% 0' } },
+        float:        { '0%,100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-8px)' } },
+      },
+      backgroundImage: {
+        'jali': "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%235C1A2E' fill-opacity='0.04' fill-rule='evenodd'%3E%3Cpath d='M20 0L40 20L20 40L0 20z'/%3E%3C/g%3E%3C/svg%3E\")",
+        'mughal-border': "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23D4A849' stroke-width='0.5' opacity='0.4'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3Ccircle cx='30' cy='30' r='14'/%3E%3Cpath d='M30 10 L30 50 M10 30 L50 30'/%3E%3C/g%3E%3C/svg%3E\")",
+      },
+    },
   },
   plugins: [],
 }
-
