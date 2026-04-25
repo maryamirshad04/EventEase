@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import PageWrapper from '../components/layout/PageWrapper'
 import EventForm from '../components/event/EventForm'
@@ -8,6 +9,7 @@ export default function EditEvent() {
   const navigate = useNavigate()
   const { getEvent, updateEvent } = useEvents()
   const event = getEvent(id)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   if (!event) {
     return (
@@ -22,9 +24,15 @@ export default function EditEvent() {
     )
   }
 
-  function handleSubmit(data) {
-    updateEvent({ ...data, id })
-    navigate(`/events/${id}`)
+  async function handleSubmit(data) {
+    setIsSubmitting(true)
+    try {
+      await updateEvent({ ...data, id })
+      navigate(`/events/${id}`)
+    } catch (error) {
+      console.error('Failed to update event:', error)
+      setIsSubmitting(false)
+    }
   }
 
   return (

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import PageWrapper from '../components/layout/PageWrapper'
 import EventForm from '../components/event/EventForm'
@@ -6,10 +7,17 @@ import { useEvents } from '../hooks/useEvents'
 export default function CreateEvent() {
   const navigate = useNavigate()
   const { addEvent } = useEvents()
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  function handleSubmit(data) {
-    addEvent(data)
-    navigate('/dashboard')
+  async function handleSubmit(data) {
+    setIsSubmitting(true)
+    try {
+      await addEvent(data)
+      navigate('/dashboard')
+    } catch (error) {
+      console.error('Failed to create event:', error)
+      setIsSubmitting(false)
+    }
   }
 
   return (

@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import api from '../utils/api'
 
 const AuthContext = createContext(null)
 
@@ -8,37 +9,56 @@ export function AuthProvider({ children }) {
 
   // On mount, restore session
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem('ee_session')
-      if (stored) setUser(JSON.parse(stored))
-    } catch {}
-    setLoading(false)
+    async function verifySession() {
+      try {
+        const stored = localStorage.getItem('ee_session')
+        if (stored) {
+          const session = JSON.parse(stored)
+          if (session && session.token) {
+            // Validate token and get fresh user data
+            const res = await api.get('/auth/me');
+            setUser({ ...res.data, token: session.token })
+          }
+        }
+      } catch (err) {
+        console.error('Session restore failed:', err)
+        localStorage.removeItem('ee_session')
+      } finally {
+        setLoading(false)
+      }
+    }
+    verifySession()
   }, [])
 
-  function signup({ name, email, password }) {
-    // Check if email already registered
-    const users = JSON.parse(localStorage.getItem('ee_users') || '[]')
-    if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) {
-      return { error: 'An account with this email already exists.' }
+  async function signup({ name, email, password }) {
+    try {
+      const res = await api.post('/auth/register', { name, email, password })
+      localStorage.setItem('ee_session', JSON.stringify(res.data))
+      setUser(res.data)
+      return { user: res.data }
+    } catch (err) {
+      return { error: err.response?.data?.message || 'Registration failed.' }
     }
-    const newUser = { id: `usr_${Date.now()}`, name, email, createdAt: new Date().toISOString() }
-    users.push({ ...newUser, password })
-    localStorage.setItem('ee_users', JSON.stringify(users))
-    localStorage.setItem('ee_session', JSON.stringify(newUser))
-    setUser(newUser)
-    return { user: newUser }
   }
 
-  function login({ email, password }) {
-    const users = JSON.parse(localStorage.getItem('ee_users') || '[]')
-    const found = users.find(
-      u => u.email.toLowerCase() === email.toLowerCase() && u.password === password
-    )
-    if (!found) return { error: 'Incorrect email or password.' }
-    const sessionUser = { id: found.id, name: found.name, email: found.email }
-    localStorage.setItem('ee_session', JSON.stringify(sessionUser))
-    setUser(sessionUser)
-    return { user: sessionUser }
+  async function login({ email, password }) {
+    try {
+      const res = await api.post('/auth/login', { email, password })
+      localStorage.setItem('ee_session', JSON.stringify(res.data))
+      setUser(res.data)
+      return { user: res.data }
+    } catch (err) {
+  console.error('Login error:', err)
+  console.log('Full error response:', err.response?.data) // ← Add this to see what backend sends
+  
+  // Try different possible error response formats
+  const errorMessage = err.response?.data?.message 
+    || err.response?.data?.error 
+    || err.response?.data 
+    || 'Incorrect email or password.'
+  
+  return { error: errorMessage }
+}
   }
 
   function logout() {

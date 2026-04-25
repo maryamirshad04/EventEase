@@ -54,9 +54,9 @@ export default function EventDetail() {
   const days = date ? daysUntil(date) : null
   const isUpcoming = status === 'upcoming'
 
-  function handleDelete() {
+  async function handleDelete() {
     if (id) {
-      deleteEvent(id)
+      await deleteEvent(id)
       navigate('/dashboard')
     }
   }

@@ -264,9 +264,19 @@ function QuickActions({ events }) {
 }
 
 export default function Dashboard() {
-  const { events, upcomingEvents, pastEvents, nextEvent, totalGuests, totalBudget } = useEvents()
+  const { events, loading, upcomingEvents, pastEvents, nextEvent, totalGuests, totalBudget } = useEvents()
   const { user } = useAuth()
   const navigate = useNavigate()
+
+  if (loading) {
+    return (
+      <PageWrapper>
+        <div className="flex justify-center items-center h-64">
+          <p className="text-textLight">Loading events...</p>
+        </div>
+      </PageWrapper>
+    )
+  }
 
   return (
     <PageWrapper>

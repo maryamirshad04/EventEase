@@ -98,19 +98,26 @@ function AuthModal({ mode, onClose, onSwitch }) {
   const [loading, setLoading] = useState(false)
   const set = k => e => setForm(f => ({ ...f, [k]: e.target.value }))
 
-  async function handleSubmit(e) {
-    e.preventDefault(); setError('')
-    if (!form.email || !form.password) { setError('Please fill in all fields.'); return }
-    if (mode==='signup' && !form.name.trim()) { setError('Please enter your name.'); return }
-    setLoading(true)
-    await new Promise(r => setTimeout(r, 400))
+async function handleSubmit(e) {
+  e.preventDefault(); setError('')
+  if (!form.email || !form.password) { setError('Please fill in all fields.'); return }
+  if (mode==='signup' && !form.name.trim()) { setError('Please enter your name.'); return }
+  
+  setLoading(true)
     const result = mode==='signup'
-      ? signup({ name:form.name.trim(), email:form.email.trim(), password:form.password })
-      : login({ email:form.email.trim(), password:form.password })
-    setLoading(false)
-    if (result.error) { setError(result.error); return }
-    onClose(); navigate('/dashboard')
+    ? await signup({ name:form.name.trim(), email:form.email.trim(), password:form.password })
+    : await login({ email:form.email.trim(), password:form.password })
+  
+  setLoading(false)
+  
+  if (result.error) { 
+    setError(result.error); 
+    return; 
   }
+  
+  onClose(); 
+  navigate('/dashboard')
+}
 
   const inputStyle = {
     width:'100%', padding:'10px 14px', borderRadius:8,

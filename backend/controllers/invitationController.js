@@ -42,6 +42,17 @@ const getTemplates = (req, res) => {
   res.json(TEMPLATES);
 };
 
+// @desc    Send invitation via email
+// @route   POST /api/invitations/send
+// @access  Private
+const sendInvitation = async (req, res) => {
+  const { eventId, guestId, templateId, message } = req.body;
+  // Mock email sending
+  console.log(`Sending invitation for event ${eventId} to guest ${guestId} using template ${templateId}`);
+  res.status(200).json({ message: 'Invitation sent successfully' });
+};
+
 module.exports = {
   getTemplates,
+  sendInvitation,
 };

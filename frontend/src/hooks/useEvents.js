@@ -1,7 +1,7 @@
 import { useEventContext } from '../context/EventContext'
 
 export function useEvents() {
-  const { events, addEvent, updateEvent, deleteEvent, addGuest, removeGuest, addExpense, removeExpense } = useEventContext()
+  const { events, loading, fetchEvents, addEvent, updateEvent, deleteEvent, addGuest, removeGuest, addExpense, removeExpense } = useEventContext()
 
   const getEvent = (id) => events.find(e => e.id === id) || null
 
@@ -17,7 +17,8 @@ export function useEvents() {
   const totalBudget = events.reduce((sum, e) => sum + Number(e.totalBudget || 0), 0)
 
   return {
-    events, upcomingEvents, pastEvents, nextEvent,
+    events, loading, fetchEvents,
+    upcomingEvents, pastEvents, nextEvent,
     totalGuests, totalBudget,
     getEvent, addEvent, updateEvent, deleteEvent,
     addGuest, removeGuest, addExpense, removeExpense,

@@ -1,108 +1,22 @@
-import { useState, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'  // Add this import
+import { useState, useMemo, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import PageWrapper from '../components/layout/PageWrapper'
 import VendorCard from '../components/vendors/VendorCard'
 import CategoryFilter from '../components/vendors/CategoryFilter'
 import Button from '../components/ui/Button'
-import Modal from '../components/ui/Modal'
-import Input from '../components/ui/Input'
 import { useVendorContext } from '../context/VendorContext'
 
 const ALL_CATEGORIES = ['All', 'Catering', 'Photography', 'Decor', 'Venue', 'Entertainment', 'Florist']
-const EMPTY_FORM = { name: '', category: 'Catering', description: '', phone: '', email: '', priceRange: '' }
-
-function VendorForm({ initialData, onSubmit, onCancel }) {
-  const [form, setForm] = useState(initialData || EMPTY_FORM)
-  const [errors, setErrors] = useState({})
-  
-  function set(k) { 
-    return e => setForm(f => ({ ...f, [k]: e.target.value })) 
-  }
-  
-  function validate() {
-    const e = {}
-    if (!form.name?.trim()) e.name = 'Vendor name required'
-    if (!form.description?.trim()) e.description = 'Description required'
-    if (!form.phone && !form.email) e.phone = 'At least phone or email required'
-    setErrors(e); 
-    return Object.keys(e).length === 0
-  }
-  
-  function handleSubmit(ev) { 
-    ev.preventDefault(); 
-    if (validate()) onSubmit(form) 
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <Input 
-        label="Vendor Name" 
-        value={form.name || ''} 
-        onChange={set('name')} 
-        error={errors.name} 
-        required 
-        placeholder="e.g. Gulshan Flowers" 
-      />
-      <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-textMid">Category <span className="text-burgundy">*</span></label>
-        <select 
-          value={form.category || 'Catering'} 
-          onChange={set('category')}
-          className="w-full px-3 py-2.5 rounded-md bg-offWhite border border-border text-textDark text-sm focus:outline-none focus:ring-2 focus:ring-sandGold"
-        >
-          {ALL_CATEGORIES.filter(c => c !== 'All').map(c => (
-            <option key={c} value={c}>{c}</option>
-          ))}
-        </select>
-      </div>
-      <Input 
-        label="Description" 
-        type="textarea" 
-        rows={2} 
-        value={form.description || ''} 
-        onChange={set('description')} 
-        error={errors.description} 
-        required 
-        placeholder="Brief description of services" 
-      />
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <Input 
-          label="Phone" 
-          value={form.phone || ''} 
-          onChange={set('phone')} 
-          error={errors.phone} 
-          placeholder="+92 300 1234567" 
-        />
-        <Input 
-          label="Email" 
-          type="email" 
-          value={form.email || ''} 
-          onChange={set('email')} 
-          placeholder="vendor@email.com" 
-        />
-      </div>
-      <Input 
-        label="Price Range" 
-        value={form.priceRange || ''} 
-        onChange={set('priceRange')} 
-        placeholder="e.g. PKR 500–900 / head" 
-      />
-      <div className="flex gap-3 pt-2">
-        <Button type="submit" variant="primary" size="md" fullWidth>Save Vendor</Button>
-        <Button type="button" variant="ghost" size="md" onClick={onCancel} fullWidth>Cancel</Button>
-      </div>
-    </form>
-  )
-}
 
 export default function Vendors() {
-  const navigate = useNavigate()  // Add this hook
-  const { vendors = [], addVendor, updateVendor, deleteVendor } = useVendorContext()
+  const navigate = useNavigate()
+  const { vendors = [], loading, fetchVendors } = useVendorContext()
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('All')
-  const [showAdd, setShowAdd] = useState(false)
-  const [editing, setEditing] = useState(null)
-  const [deleteConfirm, setDeleteConfirm] = useState(null)
+
+  useEffect(() => {
+    fetchVendors(category === 'All' ? '' : category)
+  }, [category, fetchVendors])
 
   // Safe filtering with null checks
   const filtered = useMemo(() => {
@@ -113,37 +27,13 @@ export default function Vendors() {
       // Skip if vendor is null or undefined
       if (!v) return false
       
-      const matchCat = category === 'All' || v?.category === category
       const matchSearch = !search || 
         (v?.name && v.name.toLowerCase().includes(search.toLowerCase())) || 
         (v?.description && v.description.toLowerCase().includes(search.toLowerCase()))
       
-      return matchCat && matchSearch
+      return matchSearch
     })
-  }, [vendors, category, search])
-
-  function handleAdd(data) { 
-    addVendor(data); 
-    setShowAdd(false) 
-  }
-  
-  function handleEdit(data) {
-    // CRITICAL FIX: Check if editing exists and has an id
-    if (editing?.id) {
-      updateVendor({ ...data, id: editing.id })
-      setEditing(null)
-    } else {
-      console.error('Cannot edit: No vendor selected or vendor missing ID')
-    }
-  }
-  
-  function handleDelete() {
-    // Safe delete with check
-    if (deleteConfirm) {
-      deleteVendor(deleteConfirm)
-      setDeleteConfirm(null)
-    }
-  }
+  }, [vendors, search])
 
   return (
     <PageWrapper>
@@ -201,16 +91,9 @@ export default function Vendors() {
                 </h1>
                 <p className="text-sm text-textLight mt-2 flex items-center gap-2">
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-sandGold animate-pulse"></span>
-                  System vendors + your own trusted contacts
+                  Explore our premium partners
                 </p>
               </div>
-              
-              <Button variant="primary" size="md" onClick={() => setShowAdd(true)} className="shadow-sm hover:shadow-md transition-all self-start mt-2">
-                <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd"/>
-                </svg>
-                Add My Vendor
-              </Button>
             </div>
           </div>
         </div>
@@ -279,15 +162,18 @@ export default function Vendors() {
         )}
       </div>
 
-      {/* Grid - with safe check for filtered array */}
-      {filtered.length > 0 ? (
+      {/* Loading state */}
+      {loading ? (
+        <div className="text-center py-16 bg-offWhite border border-dashed border-border rounded-xl">
+          <div className="animate-spin inline-block w-8 h-8 border-4 border-caramel border-t-transparent rounded-full mb-4"></div>
+          <p className="text-sm text-textMid mb-4">Loading vendors...</p>
+        </div>
+      ) : filtered.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {filtered.map(v => (
             <VendorCard
               key={v?.id || Math.random()} 
               vendor={v}
-              onEdit={v?.isCustom ? () => setEditing(v) : undefined}
-              onDelete={v?.isCustom ? () => setDeleteConfirm(v?.id) : undefined}
             />
           ))}
         </div>
@@ -304,37 +190,6 @@ export default function Vendors() {
           </button>
         </div>
       )}
-
-      {/* Add Vendor Modal */}
-      <Modal isOpen={showAdd} onClose={() => setShowAdd(false)} title="Add Your Vendor">
-        <VendorForm onSubmit={handleAdd} onCancel={() => setShowAdd(false)} />
-      </Modal>
-
-      {/* Edit Vendor Modal - with safe check */}
-      <Modal isOpen={!!editing} onClose={() => setEditing(null)} title="Edit Vendor">
-        {editing && (
-          <VendorForm 
-            initialData={editing} 
-            onSubmit={handleEdit} 
-            onCancel={() => setEditing(null)} 
-          />
-        )}
-      </Modal>
-
-      {/* Delete Confirm Modal */}
-      <Modal
-        isOpen={!!deleteConfirm}
-        onClose={() => setDeleteConfirm(null)}
-        title="Remove Vendor"
-        footer={
-          <>
-            <Button variant="ghost" size="sm" onClick={() => setDeleteConfirm(null)}>Cancel</Button>
-            <Button variant="danger" size="sm" onClick={handleDelete}>Remove</Button>
-          </>
-        }
-      >
-        <p className="text-sm text-textMid">Are you sure you want to remove this vendor from your list?</p>
-      </Modal>
     </PageWrapper>
   )
 }

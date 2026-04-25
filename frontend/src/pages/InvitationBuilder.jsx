@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import PageWrapper from '../components/layout/PageWrapper'
 import TemplateCard from '../components/invitation/TemplateCard'
@@ -6,43 +6,7 @@ import InvitePreview from '../components/invitation/InvitePreview'
 import Button from '../components/ui/Button'
 import Input from '../components/ui/Input'
 import { useEvents } from '../hooks/useEvents'
-
-// ── Template definitions ──────────────────────────────────────────────────────
-export const TEMPLATES = [
-  {
-    id: 'wedding',
-    name: 'Royal Wedding',
-    bgColor: '#5C1A2E',
-    primaryColor: '#FAF7F2',
-    accentColor: '#D4A849',
-    fontFamily: 'Playfair Display, serif',
-    sampleLine1: 'Wedding Ceremony',
-    sampleLine2: 'Cordially Invites You',
-    type: 'wedding',
-  },
-  {
-    id: 'birthday',
-    name: 'Birthday Bash',
-    bgColor: '#FAF7F2',
-    primaryColor: '#5C1A2E',
-    accentColor: '#C47D3E',
-    fontFamily: 'Dancing Script, cursive',
-    sampleLine1: "Birthday Celebration",
-    sampleLine2: "You're Invited!",
-    type: 'birthday',
-  },
-  {
-    id: 'dinner',
-    name: 'Elegant Dinner',
-    bgColor: '#2C1810',
-    primaryColor: '#FAF7F2',
-    accentColor: '#D4A849',
-    fontFamily: 'Cormorant Garamond, serif',
-    sampleLine1: 'A Dinner Evening',
-    sampleLine2: 'Your Company Requested',
-    type: 'dinner',
-  },
-]
+import api from '../utils/api'
 
 export default function InvitationBuilder() {
   const { id } = useParams()
@@ -51,8 +15,12 @@ export default function InvitationBuilder() {
   const event = getEvent(id)
   const previewRef = useRef(null)
 
-  const [selectedTemplate, setSelectedTemplate] = useState(TEMPLATES[0])
+  const [templates, setTemplates] = useState([])
+  const [selectedTemplate, setSelectedTemplate] = useState(null)
   const [downloading, setDownloading] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [loading, setLoading] = useState(true)
+
   const [formData, setFormData] = useState({
     eventName:  event?.name  || '',
     date:       event?.date  || '',
@@ -62,6 +30,21 @@ export default function InvitationBuilder() {
     message:    '',
     rsvp:       '',
   })
+
+  useEffect(() => {
+    async function fetchTemplates() {
+      try {
+        const res = await api.get('/invitations/templates')
+        setTemplates(res.data)
+        if (res.data.length > 0) setSelectedTemplate(res.data[0])
+      } catch (error) {
+        console.error('Failed to fetch templates:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchTemplates()
+  }, [])
 
   function setField(key) {
     return (e) => setFormData(prev => ({ ...prev, [key]: e.target.value }))
@@ -92,8 +75,41 @@ export default function InvitationBuilder() {
     }
   }
 
+  async function handleSendEmail() {
+    if (!event?.guests || event.guests.length === 0) {
+      alert('Please add guests to this event first.')
+      return
+    }
+    setSending(true)
+    try {
+      // Loop through all guests or just simulate sending to the list
+      await api.post('/invitations/send', {
+        eventId: id,
+        templateId: selectedTemplate.id,
+        message: formData.message,
+        guests: event.guests
+      })
+      alert(`Invitations sent successfully to ${event.guests.length} guests!`)
+    } catch (error) {
+      console.error('Failed to send invitations:', error)
+      alert('Failed to send invitations.')
+    } finally {
+      setSending(false)
+    }
+  }
+
   function handlePrint() {
     window.print()
+  }
+
+  if (loading || !selectedTemplate) {
+    return (
+      <PageWrapper>
+        <div className="flex justify-center items-center h-64">
+          <p className="text-textLight">Loading templates...</p>
+        </div>
+      </PageWrapper>
+    )
   }
 
   return (
@@ -181,7 +197,7 @@ export default function InvitationBuilder() {
             </div>
             <div className="p-5">
               <div className="grid grid-cols-3 gap-3">
-                {TEMPLATES.map(t => (
+                {templates.map(t => (
                   <TemplateCard
                     key={t.id}
                     template={t}
@@ -259,24 +275,19 @@ export default function InvitationBuilder() {
           </div>
 
           {/* Action buttons */}
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-col sm:flex-row gap-3 mt-4">
             <Button
               variant="primary"
               size="lg"
-              onClick={handleDownload}
-              loading={downloading}
+              onClick={handleSendEmail}
+              loading={sending}
               fullWidth
             >
               <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
               </svg>
-              {downloading ? 'Generating…' : 'Download as PNG'}
-            </Button>
-            <Button variant="secondary" size="lg" onClick={handlePrint} fullWidth>
-              <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a1 1 0 001 1h8a1 1 0 001-1v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a1 1 0 00-1-1H6a1 1 0 00-1 1zm2 0h6v3H7V4zm-1 9v-1h8v1a1 1 0 01-1 1H7a1 1 0 01-1-1zm9-4a1 1 0 110 2 1 1 0 010-2z" clipRule="evenodd" />
-              </svg>
-              Print
+              {sending ? 'Sending…' : 'Send Emails'}
             </Button>
           </div>
         </div>
