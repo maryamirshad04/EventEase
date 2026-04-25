@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import PageWrapper from '../components/layout/PageWrapper'
 import Sidebar from '../components/layout/Sidebar'
@@ -18,12 +18,25 @@ function getInitials(name = '') {
 export default function EventDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { getEvent, addGuest, removeGuest, addExpense, removeExpense, deleteEvent } = useEvents()
-  const event = getEvent(id)
+  const { fetchEventById, addGuest, removeGuest, addExpense, removeExpense, deleteEvent, eventLoading } = useEvents()
+  const [event, setEvent] = useState(null)
   const [deleteModal, setDeleteModal] = useState(false)
+  const [loading, setLoading] = useState(true)
 
-  // Loading state while fetching event
-  if (!event) {
+  // Fetch full event data on mount and when id changes
+  useEffect(() => {
+    async function loadEvent() {
+      if (id) {
+        setLoading(true)
+        const fullEvent = await fetchEventById(id)
+        setEvent(fullEvent)
+        setLoading(false)
+      }
+    }
+    loadEvent()
+  }, [id, fetchEventById])
+
+  if (loading || eventLoading) {
     return (
       <PageWrapper>
         <div className="text-center py-20">
@@ -32,13 +45,35 @@ export default function EventDetail() {
             <div className="h-4 w-32 bg-champagne/50 rounded mx-auto"></div>
           </div>
           <p className="font-display text-xl text-maroon mb-4 mt-8">Loading event details...</p>
-          <Link to="/dashboard" className="text-sm text-caramel hover:text-wine underline">Back to Dashboard</Link>
         </div>
       </PageWrapper>
     )
   }
 
-  // Safe destructuring with defaults
+  if (!event) {
+    return (
+      <PageWrapper>
+        <div className="text-center py-20">
+          <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-burgundy/10 flex items-center justify-center">
+            <svg className="w-10 h-10 text-burgundy" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+          </div>
+          <p className="font-display text-xl text-maroon mb-4">Event not found</p>
+          <p className="text-textLight text-sm mb-6">The event you're looking for doesn't exist or has been deleted.</p>
+          <Link to="/dashboard" className="inline-flex items-center gap-2 px-4 py-2 bg-maroon text-white rounded-lg hover:bg-wine transition-colors">
+            <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+            </svg>
+            Back to Dashboard
+          </Link>
+        </div>
+      </PageWrapper>
+    )
+  }
+
   const { 
     name = 'Untitled Event', 
     date = '', 
@@ -47,7 +82,7 @@ export default function EventDetail() {
     description = '', 
     guests = [], 
     status = 'upcoming',
-    budget = 0,
+    totalBudget = 0,
     expenses = []
   } = event
 
@@ -59,6 +94,32 @@ export default function EventDetail() {
       await deleteEvent(id)
       navigate('/dashboard')
     }
+  }
+
+  // Refresh event after mutations
+  async function refreshEvent() {
+    const refreshedEvent = await fetchEventById(id)
+    if (refreshedEvent) setEvent(refreshedEvent)
+  }
+
+  async function handleAddExpense(expenseData) {
+    await addExpense(id, expenseData)
+    await refreshEvent()
+  }
+
+  async function handleRemoveExpense(expenseId) {
+    await removeExpense(id, expenseId)
+    await refreshEvent()
+  }
+
+  async function handleAddGuest(guestData) {
+    await addGuest(id, guestData)
+    await refreshEvent()
+  }
+
+  async function handleRemoveGuest(guestId) {
+    await removeGuest(id, guestId)
+    await refreshEvent()
   }
 
   return (
@@ -139,7 +200,7 @@ export default function EventDetail() {
               )}
             </div>
 
-            {/* Action buttons */}
+            {/* Action buttons with icons and Invite button restored */}
             <div className="flex sm:flex-col gap-2 flex-shrink-0">
               <Link to={`/events/${id}/edit`}>
                 <Button variant="secondary" size="sm" fullWidth>
@@ -207,8 +268,8 @@ export default function EventDetail() {
             <div className="p-6">
               <GuestList
                 guests={guests || []}
-                onAdd={(g) => addGuest(id, g)}
-                onRemove={(gid) => removeGuest(id, gid)}
+                onAdd={handleAddGuest}
+                onRemove={handleRemoveGuest}
               />
             </div>
           </div>
@@ -219,11 +280,11 @@ export default function EventDetail() {
           <BudgetTracker
             event={{
               ...event,
-              budget: budget || 0,
+              totalBudget: totalBudget || 0,
               expenses: expenses || []
             }}
-            onAddExpense={(ex) => addExpense(id, ex)}
-            onRemoveExpense={(exId) => removeExpense(id, exId)}
+            onAddExpense={handleAddExpense}
+            onRemoveExpense={handleRemoveExpense}
           />
         </Sidebar>
       </div>

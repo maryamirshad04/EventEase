@@ -49,7 +49,7 @@ export function AuthProvider({ children }) {
       return { user: res.data }
     } catch (err) {
   console.error('Login error:', err)
-  console.log('Full error response:', err.response?.data) // ← Add this to see what backend sends
+  console.log('Full error response:', err.response?.data) 
   
   // Try different possible error response formats
   const errorMessage = err.response?.data?.message 

@@ -32,7 +32,8 @@ export default function GuestList({ guests = [], onAdd, onRemove, readOnly = fal
 
   function handleAdd() {
     if (!validate()) return
-    onAdd?.({ name: name.trim(), email: email.trim() })
+    onAdd?.({ id: `guest_${Date.now()}_${Math.random().toString(36).slice(2)}`,
+    name: name.trim(), email: email.trim() })
     setName(''); setEmail('')
   }
 
@@ -51,7 +52,7 @@ export default function GuestList({ guests = [], onAdd, onRemove, readOnly = fal
             </thead>
             <tbody>
               {guests.map((g, i) => (
-                <tr key={g.id} className={i % 2 === 0 ? 'bg-offWhite' : 'bg-beige/40'}>
+                <tr key={g._id || g.id} className={i % 2 === 0 ? 'bg-offWhite' : 'bg-beige/40'}>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2.5">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0 ${AVATAR_COLORS[i % AVATAR_COLORS.length]}`}>

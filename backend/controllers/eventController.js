@@ -6,10 +6,17 @@ const Expense = require('../models/Expense');
 // @access  Private
 const getEvents = async (req, res) => {
   try {
-    const events = await Event.find({ user: req.user.id }).populate('guests').sort({ date: 1 });
-    
-    // Compute total expenses for each event to include if necessary, or just return as is
-    res.json(events);
+    const events = await Event.find({ user: req.user.id })
+      .populate('guests')
+      .sort({ date: 1 })
+      .lean();
+
+    const transformed = events.map(e => ({
+      ...e,
+      id: e._id
+    }));
+
+    res.json(transformed);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -20,29 +27,32 @@ const getEvents = async (req, res) => {
 // @access  Private
 const getEventById = async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id);
+    const event = await Event.findById(req.params.id).lean();
 
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });
     }
 
-    if (event.user.toString() !== req.user.id) {
+    // safer comparison
+    if (String(event.user) !== String(req.user.id)) {
       return res.status(401).json({ message: 'User not authorized' });
     }
 
-    // Get expenses for this event
     const expenses = await Expense.find({ event: event._id });
-    
-    // We can merge expenses into the event object for the frontend
-    const eventData = event.toJSON();
-    eventData.expenses = expenses;
 
-    res.json(eventData);
+    const transformedEvent = {
+      ...event,
+      id: event._id,
+      expenses: expenses || []
+    };
+
+    res.json(transformedEvent);
+
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };
-
 // @desc    Create new event
 // @route   POST /api/events
 // @access  Private

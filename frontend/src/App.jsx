@@ -4,6 +4,7 @@ import { EventProvider } from './context/EventContext'
 import { VendorProvider } from './context/VendorContext'
 import Navbar from './components/layout/Navbar'
 // Remove the import - we don't need it for public folder files
+import { ToastProvider } from './components/ui/ToastContainer' 
 
 // Pages
 import Landing from './pages/Landing'
@@ -40,6 +41,8 @@ function AppShell() {
   const { user } = useAuth()
   
   return (
+    <ToastProvider>  
+
     <EventProvider userId={user?.id}>
       <VendorProvider userId={user?.id}>
         <div className="min-h-screen flex flex-col" style={{ 
@@ -96,6 +99,7 @@ function AppShell() {
         </div>
       </VendorProvider>
     </EventProvider>
+    </ToastProvider>                    
   )
 }
 

@@ -4,68 +4,170 @@ import PageWrapper from '../components/layout/PageWrapper'
 import VendorCard from '../components/vendors/VendorCard'
 import CategoryFilter from '../components/vendors/CategoryFilter'
 import Button from '../components/ui/Button'
+import Modal from '../components/ui/Modal'
+import Input from '../components/ui/Input'
 import { useVendorContext } from '../context/VendorContext'
 
 const ALL_CATEGORIES = ['All', 'Catering', 'Photography', 'Decor', 'Venue', 'Entertainment', 'Florist']
+const EMPTY_FORM = { name: '', category: 'Catering', description: '', phone: '', email: '', priceRange: '' }
+
+function VendorForm({ initialData, onSubmit, onCancel }) {
+  const [form, setForm] = useState(initialData || EMPTY_FORM)
+  const [errors, setErrors] = useState({})
+  
+  function set(k) { 
+    return e => setForm(f => ({ ...f, [k]: e.target.value })) 
+  }
+  
+  function validate() {
+    const e = {}
+    if (!form.name?.trim()) e.name = 'Vendor name required'
+    if (!form.description?.trim()) e.description = 'Description required'
+    if (!form.phone && !form.email) e.phone = 'At least phone or email required'
+    setErrors(e); 
+    return Object.keys(e).length === 0
+  }
+  
+  function handleSubmit(ev) { 
+    ev.preventDefault(); 
+    if (validate()) onSubmit(form) 
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <Input 
+        label="Vendor Name" 
+        value={form.name || ''} 
+        onChange={set('name')} 
+        error={errors.name} 
+        required 
+        placeholder="e.g. Gulshan Flowers" 
+      />
+      <div className="flex flex-col gap-1.5">
+        <label className="text-sm font-medium text-textMid">Category <span className="text-burgundy">*</span></label>
+        <select 
+          value={form.category || 'Catering'} 
+          onChange={set('category')}
+          className="w-full px-3 py-2.5 rounded-md bg-offWhite border border-border text-textDark text-sm focus:outline-none focus:ring-2 focus:ring-sandGold"
+        >
+          {ALL_CATEGORIES.filter(c => c !== 'All').map(c => (
+            <option key={c} value={c}>{c}</option>
+          ))}
+        </select>
+      </div>
+      <Input 
+        label="Description" 
+        type="textarea" 
+        rows={2} 
+        value={form.description || ''} 
+        onChange={set('description')} 
+        error={errors.description} 
+        required 
+        placeholder="Brief description of services" 
+      />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <Input 
+          label="Phone" 
+          value={form.phone || ''} 
+          onChange={set('phone')} 
+          error={errors.phone} 
+          placeholder="+92 300 1234567" 
+        />
+        <Input 
+          label="Email" 
+          type="email" 
+          value={form.email || ''} 
+          onChange={set('email')} 
+          placeholder="vendor@email.com" 
+        />
+      </div>
+      <Input 
+        label="Price Range" 
+        value={form.priceRange || ''} 
+        onChange={set('priceRange')} 
+        placeholder="e.g. PKR 500–900 / head" 
+      />
+      <div className="flex gap-3 pt-2">
+        <Button type="submit" variant="primary" size="md" fullWidth>Save Vendor</Button>
+        <Button type="button" variant="ghost" size="md" onClick={onCancel} fullWidth>Cancel</Button>
+      </div>
+    </form>
+  )
+}
 
 export default function Vendors() {
   const navigate = useNavigate()
-  const { vendors = [], loading, fetchVendors } = useVendorContext()
+  const { vendors = [], addVendor, updateVendor, deleteVendor } = useVendorContext()
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('All')
+  const [showAdd, setShowAdd] = useState(false)
+  const [editing, setEditing] = useState(null)
+  const [deleteConfirm, setDeleteConfirm] = useState(null)
 
-  useEffect(() => {
-    fetchVendors(category === 'All' ? '' : category)
-  }, [category, fetchVendors])
-
-  // Safe filtering with null checks
   const filtered = useMemo(() => {
-    // Ensure vendors is an array
     if (!Array.isArray(vendors)) return []
     
     return vendors.filter(v => {
-      // Skip if vendor is null or undefined
       if (!v) return false
       
+      const matchCat = category === 'All' || v?.category === category
+      
+      // Search filter
       const matchSearch = !search || 
         (v?.name && v.name.toLowerCase().includes(search.toLowerCase())) || 
         (v?.description && v.description.toLowerCase().includes(search.toLowerCase()))
       
-      return matchSearch
+      return matchCat && matchSearch 
     })
-  }, [vendors, search])
+  }, [vendors, category, search])  
+
+  function handleAdd(data) { 
+    addVendor(data); 
+    setShowAdd(false) 
+  }
+  
+  function handleEdit(data) {
+    if (editing?.id) {
+      updateVendor({ ...data, id: editing.id })
+      setEditing(null)
+    }
+  }
+  
+  function handleDelete() {
+    if (deleteConfirm) {
+      deleteVendor(deleteConfirm)
+      setDeleteConfirm(null)
+    }
+  }
 
   return (
     <PageWrapper>
       {/* Header */}
       <div className="mb-8">
-        <div className="flex items-center justify-between mb-6">
-          {/* Breadcrumb - Prominent Style for Vendor Directory */}
-          <div className="mb-6">
-            <div className="bg-gradient-to-r from-beige/80 to-offWhite/80 rounded-xl border border-wine/20 p-3 shadow-sm">
-              <div className="flex items-center gap-2 text-sm">
-                <button 
-                  onClick={() => navigate('/dashboard')} 
-                  className="flex items-center gap-1.5 hover:text-maroon transition-all duration-200 group cursor-pointer"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="group-hover:text-maroon">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                  </svg>
-                  <span className="text-textMid hover:text-maroon transition-colors">Dashboard</span>
-                </button>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="2" className="flex-shrink-0">
-                  <polyline points="9 18 15 12 9 6"></polyline>
+        <div className="mb-6">
+          <div className="bg-gradient-to-r from-beige/80 to-offWhite/80 rounded-xl border border-wine/20 p-3 shadow-sm">
+            <div className="flex items-center gap-2 text-sm">
+              <button 
+                onClick={() => navigate('/dashboard')} 
+                className="flex items-center gap-1.5 hover:text-maroon transition-all duration-200 group cursor-pointer"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="group-hover:text-maroon">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
                 </svg>
-                <div className="flex items-center gap-1.5">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7B2340" strokeWidth="1.8" className="flex-shrink-0">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                    <polyline points="22,6 12,13 2,6"></polyline>
-                    <circle cx="6" cy="18" r="1" fill="#C9A84C"></circle>
-                    <circle cx="18" cy="18" r="1" fill="#C9A84C"></circle>
-                  </svg>
-                  <span className="text-wine font-semibold bg-wine/10 px-2 py-0.5 rounded-md">Vendor Directory</span>
-                </div>
+                <span className="text-textMid hover:text-maroon transition-colors">Dashboard</span>
+              </button>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="2" className="flex-shrink-0">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+              <div className="flex items-center gap-1.5">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7B2340" strokeWidth="1.8" className="flex-shrink-0">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                  <circle cx="6" cy="18" r="1" fill="#C9A84C"></circle>
+                  <circle cx="18" cy="18" r="1" fill="#C9A84C"></circle>
+                </svg>
+                <span className="text-wine font-semibold bg-wine/10 px-2 py-0.5 rounded-md">Vendor Directory</span>
               </div>
             </div>
           </div>
@@ -91,9 +193,16 @@ export default function Vendors() {
                 </h1>
                 <p className="text-sm text-textLight mt-2 flex items-center gap-2">
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-sandGold animate-pulse"></span>
-                  Explore our premium partners
+                  System vendors + your own trusted contacts
                 </p>
               </div>
+              
+              <Button variant="primary" size="md" onClick={() => setShowAdd(true)} className="shadow-sm hover:shadow-md transition-all self-start mt-2">
+                <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd"/>
+                </svg>
+                Add My Vendor
+              </Button>
             </div>
           </div>
         </div>
@@ -162,18 +271,15 @@ export default function Vendors() {
         )}
       </div>
 
-      {/* Loading state */}
-      {loading ? (
-        <div className="text-center py-16 bg-offWhite border border-dashed border-border rounded-xl">
-          <div className="animate-spin inline-block w-8 h-8 border-4 border-caramel border-t-transparent rounded-full mb-4"></div>
-          <p className="text-sm text-textMid mb-4">Loading vendors...</p>
-        </div>
-      ) : filtered.length > 0 ? (
+      {/* Grid */}
+      {filtered.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {filtered.map(v => (
             <VendorCard
               key={v?.id || Math.random()} 
               vendor={v}
+              onEdit={v?.isCustom ? () => setEditing(v) : undefined}
+              onDelete={v?.isCustom ? () => setDeleteConfirm(v?.id) : undefined}
             />
           ))}
         </div>
@@ -190,6 +296,37 @@ export default function Vendors() {
           </button>
         </div>
       )}
+
+      {/* Add Vendor Modal */}
+      <Modal isOpen={showAdd} onClose={() => setShowAdd(false)} title="Add Your Vendor">
+        <VendorForm onSubmit={handleAdd} onCancel={() => setShowAdd(false)} />
+      </Modal>
+
+      {/* Edit Vendor Modal */}
+      <Modal isOpen={!!editing} onClose={() => setEditing(null)} title="Edit Vendor">
+        {editing && (
+          <VendorForm 
+            initialData={editing} 
+            onSubmit={handleEdit} 
+            onCancel={() => setEditing(null)} 
+          />
+        )}
+      </Modal>
+
+      {/* Delete Confirm Modal */}
+      <Modal
+        isOpen={!!deleteConfirm}
+        onClose={() => setDeleteConfirm(null)}
+        title="Remove Vendor"
+        footer={
+          <>
+            <Button variant="ghost" size="sm" onClick={() => setDeleteConfirm(null)}>Cancel</Button>
+            <Button variant="danger" size="sm" onClick={handleDelete}>Remove</Button>
+          </>
+        }
+      >
+        <p className="text-sm text-textMid">Are you sure you want to remove this vendor from your list?</p>
+      </Modal>
     </PageWrapper>
   )
 }

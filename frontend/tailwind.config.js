@@ -46,7 +46,7 @@ export default {
         'slide-in-r': 'slideInRight 0.3s ease-out',
         'bar-fill':   'barFill 0.6s ease-out forwards',
         'shimmer':    'shimmer 1.5s infinite',
-        'float':      'float 3s ease-in-out infinite',
+        'float':      'float 3s ease-in-out infinite', 
       },
       keyframes: {
         fadeIn:       { from: { opacity: 0 }, to: { opacity: 1 } },

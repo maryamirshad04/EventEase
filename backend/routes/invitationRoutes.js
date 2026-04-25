@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { getTemplates, sendInvitation } = require('../controllers/invitationController');
+const { getTemplates, sendInvitations } = require('../controllers/invitationController');
 const { protect } = require('../middleware/authMiddleware');
 
 router.get('/templates', getTemplates);
-router.post('/send', protect, sendInvitation);
+router.post('/send', protect, sendInvitations);
 
 module.exports = router;

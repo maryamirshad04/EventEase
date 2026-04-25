@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const vendorSchema = new mongoose.Schema({
+  user: {                       
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   name: {
     type: String,
     required: true,
@@ -19,10 +24,11 @@ const vendorSchema = new mongoose.Schema({
     type: String,
   },
   priceRange: {
-    type: String, // e.g. 'PKR 800–1,500 / head'
+    type: String,
   },
   priceType: {
-    type: String, // 'per_head' | 'flat'
+    type: String,
+    enum: ['per_head', 'flat'],
   },
   priceMin: {
     type: Number,
