@@ -43,7 +43,7 @@ function AppShell() {
   return (
     <ToastProvider>  
 
-    <EventProvider userId={user?.id}>
+    <EventProvider >
       <VendorProvider userId={user?.id}>
         <div className="min-h-screen flex flex-col" style={{ 
           backgroundImage: "url('/assets/dashboard-bg.jpg')",

@@ -18,12 +18,12 @@ function getInitials(name = '') {
 export default function EventDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { fetchEventById, addGuest, removeGuest, addExpense, removeExpense, deleteEvent, eventLoading } = useEvents()
+  const { fetchEventById, addGuest, removeGuest, addExpense, removeExpense, deleteEvent } = useEvents()
   const [event, setEvent] = useState(null)
   const [deleteModal, setDeleteModal] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  // Fetch full event data on mount and when id changes
+  // Fetch full event data on mount
   useEffect(() => {
     async function loadEvent() {
       if (id) {
@@ -36,7 +36,8 @@ export default function EventDetail() {
     loadEvent()
   }, [id, fetchEventById])
 
-  if (loading || eventLoading) {
+  // Only show loading spinner on initial load
+  if (loading) {
     return (
       <PageWrapper>
         <div className="text-center py-20">
@@ -96,30 +97,130 @@ export default function EventDetail() {
     }
   }
 
-  // Refresh event after mutations
-  async function refreshEvent() {
-    const refreshedEvent = await fetchEventById(id)
-    if (refreshedEvent) setEvent(refreshedEvent)
-  }
-
+  // Optimistic update for adding expense
   async function handleAddExpense(expenseData) {
-    await addExpense(id, expenseData)
-    await refreshEvent()
+    // Generate temporary ID for optimistic update
+    const tempId = `temp_${Date.now()}`
+    const optimisticExpense = { ...expenseData, id: tempId }
+    
+    // Update UI immediately
+    setEvent(prev => ({
+      ...prev,
+      expenses: [...(prev.expenses || []), optimisticExpense]
+    }))
+    
+    try {
+      // Make actual API call
+      const newExpense = await addExpense(id, expenseData)
+      
+      // Replace temp expense with real one
+      setEvent(prev => ({
+        ...prev,
+        expenses: prev.expenses.map(exp => 
+          exp.id === tempId ? newExpense : exp
+        )
+      }))
+    } catch (error) {
+      // If failed, remove the optimistic expense
+      setEvent(prev => ({
+        ...prev,
+        expenses: prev.expenses.filter(exp => exp.id !== tempId)
+      }))
+      console.error('Failed to add expense:', error)
+      alert('Failed to add expense. Please try again.')
+    }
   }
 
+  // Optimistic update for removing expense
   async function handleRemoveExpense(expenseId) {
-    await removeExpense(id, expenseId)
-    await refreshEvent()
+    // Store the expense being removed for potential rollback
+    const removedExpense = event.expenses?.find(exp => exp.id === expenseId)
+    
+    // Update UI immediately
+    setEvent(prev => ({
+      ...prev,
+      expenses: (prev.expenses || []).filter(exp => exp.id !== expenseId)
+    }))
+    
+    try {
+      await removeExpense(id, expenseId)
+    } catch (error) {
+      // Rollback on failure
+      setEvent(prev => ({
+        ...prev,
+        expenses: [...(prev.expenses || []), removedExpense]
+      }))
+      console.error('Failed to remove expense:', error)
+      alert('Failed to remove expense. Please try again.')
+    }
   }
 
-  async function handleAddGuest(guestData) {
-    await addGuest(id, guestData)
-    await refreshEvent()
-  }
+  // // Optimistic update for adding guest
+  // async function handleAddGuest(guestData) {
+  //   const tempId = `temp_${Date.now()}`
+  //   const optimisticGuest = { ...guestData, id: tempId }
+  //     console.log('Optimistic guest:', optimisticGuest) // Debug
 
+  //   // Update UI immediately
+  //   setEvent(prev => ({
+  //     ...prev,
+  //     guests: [...(prev.guests || []), optimisticGuest]
+  //   }))
+    
+  //   try {
+  //     const newGuest = await addGuest(id, guestData)
+  //         console.log('API returned guest:', newGuest) // Debug - check what this returns
+
+  //     // Replace temp guest with real one
+  //     setEvent(prev => ({
+  //       ...prev,
+  //       guests: prev.guests.map(guest => 
+  //         guest.id === tempId ? newGuest : guest
+  //       )
+  //     }))
+  //   } catch (error) {
+  //     // Rollback on failure
+  //     setEvent(prev => ({
+  //       ...prev,
+  //       guests: prev.guests.filter(guest => guest.id !== tempId)
+  //     }))
+  //     console.error('Failed to add guest:', error)
+  //     alert('Failed to add guest. Please try again.')
+  //   }
+  // }
+async function handleAddGuest(guestData) {
+  try {
+    const updatedGuests = await addGuest(id, guestData)
+
+    setEvent(prev => ({
+      ...prev,
+      guests: updatedGuests
+    }))
+  } catch (error) {
+    console.error('Failed to add guest:', error)
+  }
+}
+  // Optimistic update for removing guest
   async function handleRemoveGuest(guestId) {
-    await removeGuest(id, guestId)
-    await refreshEvent()
+    const removedGuest = event.guests?.find(guest => guest.id === guestId)
+    
+    // Update UI immediately
+    setEvent(prev => ({
+      ...prev,
+      guests: (prev.guests || []).filter(guest => guest.id !== guestId)
+    }))
+    
+    try {
+      await removeGuest(id, guestId)
+    } catch (error) {
+      // Rollback on failure
+      setEvent(prev => ({
+        ...prev,
+        guests: [...(prev.guests || []), removedGuest]
+      }))
+      console.error('Failed to remove guest:', error)
+      alert('Failed to remove guest. Please try again.')
+    }
   }
 
   return (
@@ -200,7 +301,7 @@ export default function EventDetail() {
               )}
             </div>
 
-            {/* Action buttons with icons and Invite button restored */}
+            {/* Action buttons */}
             <div className="flex sm:flex-col gap-2 flex-shrink-0">
               <Link to={`/events/${id}/edit`}>
                 <Button variant="secondary" size="sm" fullWidth>

@@ -8,12 +8,15 @@ const getEvents = async (req, res) => {
   try {
     const events = await Event.find({ user: req.user.id })
       .populate('guests')
-      .sort({ date: 1 })
+      .sort({ datetime: 1 })
       .lean();
 
     const transformed = events.map(e => ({
       ...e,
-      id: e._id
+      id: e._id,
+      // Format datetime for frontend display
+      date: e.datetime ? e.datetime.toISOString().split('T')[0] : '',
+      time: e.datetime ? e.datetime.toTimeString().slice(0, 5) : '',
     }));
 
     res.json(transformed);
@@ -41,8 +44,10 @@ const getEventById = async (req, res) => {
     const expenses = await Expense.find({ event: event._id });
 
     const transformedEvent = {
-      ...event,
+     ...event,
       id: event._id,
+      date: event.datetime ? event.datetime.toISOString().split('T')[0] : '',
+      time: event.datetime ? event.datetime.toTimeString().slice(0, 5) : '',
       expenses: expenses || []
     };
 
@@ -58,12 +63,14 @@ const getEventById = async (req, res) => {
 // @access  Private
 const createEvent = async (req, res) => {
   try {
-    const { name, date, time, location, description, totalBudget, status, guests } = req.body;
-
+    const { name, datetime, time, location, description, totalBudget, status, guests } = req.body;
+if (!datetime) {
+      return res.status(400).json({ message: 'Event date and time is required' });
+    }
     const event = await Event.create({
       user: req.user.id,
       name,
-      date,
+      datetime: new Date(datetime),
       time,
       location,
       description,
@@ -93,7 +100,15 @@ const updateEvent = async (req, res) => {
       return res.status(401).json({ message: 'User not authorized' });
     }
 
-    const updatedEvent = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true });
+   if (updateData.datetime) {
+      updateData.datetime = new Date(updateData.datetime);
+    }
+
+    const updatedEvent = await Event.findByIdAndUpdate(
+      req.params.id, 
+      updateData, 
+      { new: true, runValidators: true }
+    );
     
     // Append expenses so the frontend receives complete data
     const expenses = await Expense.find({ event: updatedEvent._id });

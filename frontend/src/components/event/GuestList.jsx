@@ -32,8 +32,12 @@ export default function GuestList({ guests = [], onAdd, onRemove, readOnly = fal
 
   function handleAdd() {
     if (!validate()) return
-    onAdd?.({ id: `guest_${Date.now()}_${Math.random().toString(36).slice(2)}`,
-    name: name.trim(), email: email.trim() })
+    // onAdd?.({ id: `guest_${Date.now()}_${Math.random().toString(36).slice(2)}`,
+    // name: name.trim(), email: email.trim() })
+    onAdd?.({
+  name: name.trim(),
+  email: email.trim()
+})
     setName(''); setEmail('')
   }
 
@@ -65,7 +69,7 @@ export default function GuestList({ guests = [], onAdd, onRemove, readOnly = fal
                   {!readOnly && (
                     <td className="px-4 py-3 text-right">
                       <button
-                        onClick={() => onRemove?.(g.id)}
+onClick={() => onRemove?.(g._id || g.id)}
                         className="text-textLight hover:text-burgundy transition-colors p-1 rounded"
                         aria-label="Remove guest"
                       >

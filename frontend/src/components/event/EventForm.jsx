@@ -34,21 +34,26 @@ export default function EventForm({ initialData = null, onSubmit, onCancel }) {
   }
 
   function handleSubmit(e) {
-    e.preventDefault()
-    if (!validate()) return
-    setLoading(true)
-    setTimeout(() => {
-      onSubmit?.({
-        ...form,
-        totalBudget: Number(form.totalBudget),
-        guests: guests,
-        expenses: initialData?.expenses || [],
-        status: initialData?.status || 'upcoming',
-        ...(initialData?.id ? { id: initialData.id } : {}),
-      })
-      setLoading(false)
-    }, 400)
-  }
+  e.preventDefault();
+  
+  if (!validate()) return;
+  
+  setLoading(true);
+  
+  const datetime = new Date(`${form.date}T${form.time}:00`);
+  
+  onSubmit?.({
+    ...form,
+    datetime: datetime.toISOString(),
+    totalBudget: Number(form.totalBudget),
+    guests: guests,
+    expenses: initialData?.expenses || [],
+    status: initialData?.status || 'upcoming',
+    ...(initialData?.id ? { id: initialData.id } : {}),
+  });
+  
+  // setLoading(false); // Move this inside onSubmit's .then() or .finally() for better UX
+}
 
   function addGuest(g) {
     setGuests(prev => [...prev, { ...g, id: `g_${Date.now()}` }])

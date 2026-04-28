@@ -4,7 +4,13 @@ const guestSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String },
 });
-
+guestSchema.set('toJSON', {
+  virtuals: true,
+  transform: (doc, ret) => {
+    ret.id = ret._id;
+    delete ret._id;
+  }
+});
 const eventSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -16,14 +22,10 @@ const eventSchema = new mongoose.Schema({
     required: [true, 'Event name is required'],
     trim: true,
   },
-  date: {
-    type: Date,
-    required: true,
-  },
-  time: {
-    type: String,
-    required: true,
-  },
+  datetime: {
+  type: Date,
+  required: true,
+},
   location: {
     type: String,
     required: true,
