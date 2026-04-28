@@ -8,7 +8,8 @@ const {
   deleteEvent,
   addGuest,
   removeGuest,
-  getEventBudget 
+  getEventBudget,
+    updateCategoryBudget 
 } = require('../controllers/eventController');
 const { getExpenses, addExpense } = require('../controllers/expenseController');
 const { protect } = require('../middleware/authMiddleware');
@@ -30,6 +31,9 @@ router.route('/:id/guests/:guestId')
 
 router.route('/:id/budget')
   .get(protect, getEventBudget);
+
+router.route('/:id/category-budget')
+  .put(protect, updateCategoryBudget);
 
 router.route('/:eventId/expenses')
   .get(protect, getExpenses)

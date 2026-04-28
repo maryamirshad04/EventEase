@@ -6,7 +6,7 @@ import GuestList from './GuestList'
 const emptyForm = { name: '', date: '', time: '', location: '', description: '', totalBudget: '' }
 
 export default function EventForm({ initialData = null, onSubmit, onCancel }) {
-  const [form,   setForm]   = useState(initialData ? {
+  const [form, setForm] = useState(initialData ? {
     name: initialData.name || '',
     date: initialData.date || '',
     time: initialData.time || '',
@@ -15,45 +15,43 @@ export default function EventForm({ initialData = null, onSubmit, onCancel }) {
     totalBudget: initialData.totalBudget || '',
   } : emptyForm)
 
-  const [guests,  setGuests]  = useState(initialData?.guests || [])
-  const [errors,  setErrors]  = useState({})
+  const [guests, setGuests] = useState(initialData?.guests || [])
+  const [errors, setErrors] = useState({})
   const [loading, setLoading] = useState(false)
 
   function set(field) { return e => setForm(f => ({ ...f, [field]: e.target.value })) }
 
   function validate() {
     const e = {}
-    if (!form.name.trim())     e.name     = 'Event name is required'
-    if (!form.date)            e.date     = 'Date is required'
-    if (!form.time)            e.time     = 'Time is required'
+    if (!form.name.trim()) e.name = 'Event name is required'
+    if (!form.date) e.date = 'Date is required'
+    if (!form.time) e.time = 'Time is required'
     if (!form.location.trim()) e.location = 'Location is required'
     if (!form.totalBudget || isNaN(form.totalBudget) || Number(form.totalBudget) <= 0)
-                               e.totalBudget = 'Enter a valid budget'
+      e.totalBudget = 'Enter a valid budget'
     setErrors(e)
     return Object.keys(e).length === 0
   }
 
-  function handleSubmit(e) {
-  e.preventDefault();
-  
-  if (!validate()) return;
-  
-  setLoading(true);
-  
-  const datetime = new Date(`${form.date}T${form.time}:00`);
-  
-  onSubmit?.({
-    ...form,
-    datetime: datetime.toISOString(),
-    totalBudget: Number(form.totalBudget),
-    guests: guests,
-    expenses: initialData?.expenses || [],
-    status: initialData?.status || 'upcoming',
-    ...(initialData?.id ? { id: initialData.id } : {}),
-  });
-  
-  // setLoading(false); // Move this inside onSubmit's .then() or .finally() for better UX
-}
+  async function handleSubmit(e) {
+    e.preventDefault()
+    if (!validate()) return
+
+    setLoading(true)
+
+    try {
+      await onSubmit?.({
+        ...form,
+        totalBudget: Number(form.totalBudget),
+        guests,
+        expenses: initialData?.expenses || [],
+        status: initialData?.status || 'upcoming',
+        ...(initialData?.id ? { id: initialData.id } : {}),
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
 
   function addGuest(g) {
     setGuests(prev => [...prev, { ...g, id: `g_${Date.now()}` }])

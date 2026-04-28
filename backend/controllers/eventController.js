@@ -44,7 +44,7 @@ const getEventById = async (req, res) => {
     const expenses = await Expense.find({ event: event._id });
 
     const transformedEvent = {
-     ...event,
+      ...event,
       id: event._id,
       date: event.datetime ? event.datetime.toISOString().split('T')[0] : '',
       time: event.datetime ? event.datetime.toTimeString().slice(0, 5) : '',
@@ -64,7 +64,7 @@ const getEventById = async (req, res) => {
 const createEvent = async (req, res) => {
   try {
     const { name, datetime, time, location, description, totalBudget, status, guests } = req.body;
-if (!datetime) {
+    if (!datetime) {
       return res.status(400).json({ message: 'Event date and time is required' });
     }
     const event = await Event.create({
@@ -99,18 +99,18 @@ const updateEvent = async (req, res) => {
     if (event.user.toString() !== req.user.id) {
       return res.status(401).json({ message: 'User not authorized' });
     }
+    const updateData = req.body;
 
-   if (updateData.datetime) {
+    if (updateData.datetime) {
       updateData.datetime = new Date(updateData.datetime);
     }
 
     const updatedEvent = await Event.findByIdAndUpdate(
-      req.params.id, 
-      updateData, 
+      req.params.id,
+      updateData,
       { new: true, runValidators: true }
     );
-    
-    // Append expenses so the frontend receives complete data
+
     const expenses = await Expense.find({ event: updatedEvent._id });
     const eventData = updatedEvent.toJSON();
     eventData.expenses = expenses;
@@ -226,6 +226,36 @@ const getEventBudget = async (req, res) => {
   }
 };
 
+// In eventController.js
+const updateCategoryBudget = async (req, res) => {
+  try {
+    const { category, amount } = req.body
+    const event = await Event.findById(req.params.id)
+
+    if (!event) return res.status(404).json({ message: 'Event not found' })
+    if (event.user.toString() !== req.user.id) {
+      return res.status(401).json({ message: 'Not authorized' })
+    }
+
+    // Update the category budget
+    event.categoryBudgets[category] = amount
+    await event.save()
+
+    // Check if we need to warn about overspending
+    const categorySpent = await getCategorySpent(req.params.id, category)
+    const warning = categorySpent > amount && amount > 0
+      ? `Warning: ${category} spending (${formatCurrency(categorySpent)}) exceeds new budget`
+      : null
+
+    res.json({
+      categoryBudgets: event.categoryBudgets,
+      warning
+    })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
 module.exports = {
   getEvents,
   getEventById,
@@ -234,5 +264,6 @@ module.exports = {
   deleteEvent,
   addGuest,
   removeGuest,
-  getEventBudget
+  getEventBudget,
+  updateCategoryBudget
 };

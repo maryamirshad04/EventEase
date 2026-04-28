@@ -11,42 +11,29 @@ guestSchema.set('toJSON', {
     delete ret._id;
   }
 });
+
 const eventSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  name: { type: String, required: true },
+  datetime: { type: Date, required: true },
+  location: { type: String, required: true },
+  description: { type: String },
+  totalBudget: { type: Number, required: true, default: 0 },
+  
+  categoryBudgets: {
+    Food: { type: Number, default: 0 },
+    Decor: { type: Number, default: 0 },
+    Venue: { type: Number, default: 0 },
+    Photography: { type: Number, default: 0 },
+    Entertainment: { type: Number, default: 0 },
+    Florist: { type: Number, default: 0 },
+    Miscellaneous: { type: Number, default: 0 }
   },
-  name: {
-    type: String,
-    required: [true, 'Event name is required'],
-    trim: true,
-  },
-  datetime: {
-  type: Date,
-  required: true,
-},
-  location: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-  },
-  totalBudget: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
+  
   guests: [guestSchema],
-  status: {
-    type: String,
-    enum: ['upcoming', 'past'],
-    default: 'upcoming',
-  },
+  status: { type: String, enum: ['upcoming', 'past'], default: 'upcoming' },
 }, { timestamps: true });
 
-//virtual to transform _id to id for the frontend
 eventSchema.set('toJSON', {
   virtuals: true,
   transform: (doc, ret) => {
