@@ -1,8 +1,5 @@
 const Vendor = require('../models/Vendor');
 
-// @desc    Get all vendors for authenticated user
-// @route   GET /api/vendors
-// @access  Private
 const getVendors = async (req, res) => {
   try {
     const { category } = req.query;
@@ -17,16 +14,12 @@ const getVendors = async (req, res) => {
   }
 };
 
-// @desc    Get single vendor
-// @route   GET /api/vendors/:id
-// @access  Private
 const getVendorById = async (req, res) => {
   try {
     const vendor = await Vendor.findById(req.params.id);
     if (!vendor) {
       return res.status(404).json({ message: 'Vendor not found' });
     }
-    // Check if vendor belongs to user
     if (vendor.user.toString() !== req.user.id) {
       return res.status(401).json({ message: 'Not authorized' });
     }
@@ -35,10 +28,6 @@ const getVendorById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-// @desc    Create a vendor
-// @route   POST /api/vendors
-// @access  Private
 const createVendor = async (req, res) => {
   try {
     const { name, category, description, phone, email, priceRange, priceType, priceMin, priceMax } = req.body;
@@ -61,10 +50,6 @@ const createVendor = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-// @desc    Update a vendor
-// @route   PUT /api/vendors/:id
-// @access  Private
 const updateVendor = async (req, res) => {
   try {
     const vendor = await Vendor.findById(req.params.id);
@@ -72,9 +57,7 @@ const updateVendor = async (req, res) => {
     if (!vendor) {
       return res.status(404).json({ message: 'Vendor not found' });
     }
-    
-    // Check if vendor belongs to user
-    if (vendor.user.toString() !== req.user.id) {
+        if (vendor.user.toString() !== req.user.id) {
       return res.status(401).json({ message: 'Not authorized' });
     }
     
@@ -90,9 +73,7 @@ const updateVendor = async (req, res) => {
   }
 };
 
-// @desc    Delete a vendor
-// @route   DELETE /api/vendors/:id
-// @access  Private
+
 const deleteVendor = async (req, res) => {
   try {
     const vendor = await Vendor.findById(req.params.id);
@@ -100,8 +81,6 @@ const deleteVendor = async (req, res) => {
     if (!vendor) {
       return res.status(404).json({ message: 'Vendor not found' });
     }
-    
-    // Check if vendor belongs to user
     if (vendor.user.toString() !== req.user.id) {
       return res.status(401).json({ message: 'Not authorized' });
     }

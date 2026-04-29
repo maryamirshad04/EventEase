@@ -1,10 +1,9 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api', // Assumes backend runs on port 5000
+  baseURL: 'http://localhost:5000/api', 
 });
 
-// Intercept requests to attach the auth token
 api.interceptors.request.use(
   (config) => {
     try {

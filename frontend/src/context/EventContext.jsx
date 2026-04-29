@@ -3,13 +3,12 @@ import api from '../utils/api'
 
 const EventContext = createContext(null)
 
-export function EventProvider({ children }) { // Remove userId prop - get from auth instead
+export function EventProvider({ children }) { 
   const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(true)
   const [currentEvent, setCurrentEvent] = useState(null)
   const [eventLoading, setEventLoading] = useState(false)
 
-  // Fetch all events (basic info, no expenses)
   const fetchEvents = useCallback(async () => {
     try {
       setLoading(true)
@@ -17,14 +16,12 @@ export function EventProvider({ children }) { // Remove userId prop - get from a
       setEvents(res.data || [])
     } catch (err) {
       console.error('Failed to fetch events:', err)
-      // Optionally show a toast notification here
-      throw err // Re-throw if you want components to handle it
+      throw err 
     } finally {
       setLoading(false)
     }
-  }, []) // Remove userId dependency - the API should get it from the token
+  }, []) 
 
-  // Fetch a single event with FULL data (including expenses)
   const fetchEventById = useCallback(async (eventId) => {
     if (!eventId) return null
     
@@ -34,7 +31,6 @@ export function EventProvider({ children }) { // Remove userId prop - get from a
       const fullEvent = res.data
       setCurrentEvent(fullEvent)
       
-      // Also update the event in the events array
       setEvents(prev => prev.map(e => 
         e.id === fullEvent.id ? fullEvent : e
       ))
@@ -48,7 +44,6 @@ export function EventProvider({ children }) { // Remove userId prop - get from a
     }
   }, [])
 
-  // Get event from local state (might not have expenses)
   const getEvent = (eventId) => {
     return events.find(e => e.id === eventId) || null
   }
@@ -61,8 +56,7 @@ export function EventProvider({ children }) { // Remove userId prop - get from a
     try {
       const res = await api.post('/events', eventData)
       const newEvent = res.data
-      
-      // Format the response to match frontend expectations
+
       const formattedEvent = {
         ...newEvent,
         id: newEvent.id || newEvent._id,
@@ -74,16 +68,14 @@ export function EventProvider({ children }) { // Remove userId prop - get from a
       return formattedEvent
     } catch (err) {
       console.error('Add event error:', err.response?.data || err.message)
-      throw err // Re-throw so the component can handle it
+      throw err
     }
   }
 
   const updateEvent = async (eventData) => {
     try {
       const res = await api.put(`/events/${eventData.id}`, eventData)
-      const updatedEvent = res.data
-      
-      // Format the response
+      const updatedEvent = res.data    
       const formattedEvent = {
         ...updatedEvent,
         id: updatedEvent.id || updatedEvent._id,
@@ -118,7 +110,6 @@ export function EventProvider({ children }) { // Remove userId prop - get from a
   const addGuest = async (eventId, guestData) => {
     try {
       const res = await api.post(`/events/${eventId}/guests`, guestData)
-      // The backend might return just the guests array or the full event
       const updatedGuests = res.data
       
       setEvents(prev => prev.map(e => 
@@ -154,7 +145,6 @@ export function EventProvider({ children }) { // Remove userId prop - get from a
   const addExpense = async (eventId, expenseData) => {
     try {
       const res = await api.post(`/events/${eventId}/expenses`, expenseData)
-      // Refresh the event to get updated expenses
       await fetchEventById(eventId)
       return res.data
     } catch (err) {
@@ -166,7 +156,6 @@ export function EventProvider({ children }) { // Remove userId prop - get from a
   const removeExpense = async (eventId, expenseId) => {
     try {
       await api.delete(`/expenses/${expenseId}`)
-      // Refresh the event to get updated expenses
       await fetchEventById(eventId)
     } catch (err) {
       console.error('Remove expense error:', err.response?.data || err.message)

@@ -6,9 +6,7 @@ const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 
-// @desc    Register new user
-// @route   POST /api/auth/register
-// @access  Public
+
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -42,33 +40,24 @@ const registerUser = async (req, res) => {
   }
 };
 
-// @desc    Authenticate a user
-// @route   POST /api/auth/login
-// @access  Public
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
-  // Validate input
   if (!email || !password) {
     return res.status(400).json({ message: 'Please provide email and password' });
   }
 
   try {
-    // Find user and explicitly select password field
     const user = await User.findOne({ email }).select('+password');
     
-    // Check if user exists AND password matches
     if (!user) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
     
-    const isPasswordMatch = await bcrypt.compare(password, user.password);
-    
+    const isPasswordMatch = await bcrypt.compare(password, user.password);   
     if (!isPasswordMatch) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
-
-    // If we get here, login is successful
     res.json({
       id: user._id,
       name: user.name,
@@ -81,9 +70,6 @@ const loginUser = async (req, res) => {
   }
 };
 
-// @desc    Get user data
-// @route   GET /api/auth/me
-// @access  Private
 const getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);

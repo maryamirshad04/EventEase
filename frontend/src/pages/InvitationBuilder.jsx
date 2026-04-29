@@ -111,7 +111,6 @@ export default function InvitationBuilder() {
     window.print()
   }
 
-  // Open guest selection modal
  function handleSendEmailClick() {
   if (!event?.guests || event.guests.length === 0) {
     showWarning('Please add guests to this event first.')
@@ -122,7 +121,6 @@ export default function InvitationBuilder() {
   setShowGuestModal(true)
 }
 
-  // Toggle individual guest selection
   function toggleGuest(guestId) {
   if (!guestId) return
   const sid = String(guestId)
@@ -133,7 +131,6 @@ export default function InvitationBuilder() {
   setSelectAll(newSelected.length === event?.guests?.length)
 }
 
-  // Toggle select all guests 
   function toggleSelectAll() {
     const allGuestIds = event.guests.map(g => String(g._id || g.id));
     if (selectAll) {
@@ -144,7 +141,6 @@ export default function InvitationBuilder() {
       setSelectAll(true);
     }
   }
-  // Send emails to selected guests
   async function handleSendEmails() {
     if (selectedGuests.length === 0) {
       showWarning('Please select at least one guest to send invitations to.')
@@ -153,7 +149,7 @@ export default function InvitationBuilder() {
 
     const selectedGuestObjects = event.guests
       .filter(g => selectedGuests.includes(String(g._id || g.id)))
-      .filter(g => g.email); // keep only valid emails
+      .filter(g => g.email); 
 
     setSending(true)
     setShowGuestModal(false)
@@ -192,7 +188,6 @@ export default function InvitationBuilder() {
     )
   }
 
-  // Get guest object by id to display name
   const getGuestName = (guestId) => {
     const guest = event?.guests?.find(g => g.id === guestId)
     return guest?.name || 'Unknown'

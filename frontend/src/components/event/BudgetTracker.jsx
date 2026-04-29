@@ -10,7 +10,6 @@ import { formatCurrency } from '../../utils/formatCurrency'
 
 const CATEGORIES = ['Food', 'Decor', 'Venue', 'Photography', 'Entertainment', 'Florist', 'Miscellaneous']
 
-// How much of this category's budget is used by its expenses
 function categorySpent(expenses = [], category) {
   if (!Array.isArray(expenses)) return 0
   return expenses
@@ -19,7 +18,6 @@ function categorySpent(expenses = [], category) {
 }
 
 export default function BudgetTracker({ event, onAddExpense, onRemoveExpense }) {
-  // Safe event access with defaults
   const safeEvent = event || {}
   const { spent, remaining, percent } = useBudget(safeEvent)
   const expenses = Array.isArray(safeEvent?.expenses) ? safeEvent.expenses : []

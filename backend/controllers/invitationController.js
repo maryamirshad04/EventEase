@@ -1,7 +1,6 @@
 const nodemailer = require('nodemailer');
 const Event = require('../models/Event');
 
-// Hardcoded templates from frontend
 const TEMPLATES = [
   {
     id: 'wedding',
@@ -38,7 +37,6 @@ const TEMPLATES = [
   },
 ];
 
-// Configure email transporter
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -47,23 +45,15 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// @desc    Get invitation templates
-// @route   GET /api/invitations/templates
-// @access  Public
 const getTemplates = (req, res) => {
   res.json(TEMPLATES);
 };
 
-// @desc    Send invitations to guests
-// @route   POST /api/invitations/send
-// @access  Private
 const sendInvitations = async (req, res) => {
   try {
     const { eventId, templateId, templateData, guests } = req.body;
 
     console.log('Received request:', { eventId, templateId, guestsCount: guests?.length });
-
-    // Verify event belongs to user
     const event = await Event.findById(eventId);
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });
@@ -71,15 +61,12 @@ const sendInvitations = async (req, res) => {
     if (event.user.toString() !== req.user.id) {
       return res.status(401).json({ message: 'Not authorized' });
     }
-
-    // Filter guests with email addresses
     const guestsWithEmail = guests.filter(g => g && g.email);
     
     if (guestsWithEmail.length === 0) {
       return res.status(400).json({ message: 'No guests have email addresses' });
     }
 
-    // Generate HTML email content based on template
     const generateEmailHTML = (guest, templateData, templateId) => {
       return `
         <div style="font-family: 'Playfair Display', serif; max-width: 600px; margin: 0 auto; background: linear-gradient(160deg, #3D0B1A 0%, #5C1A2E 100%); color: #FAF7F2; padding: 40px; border-radius: 16px;">
@@ -94,7 +81,7 @@ const sendInvitations = async (req, res) => {
           <h1 style="font-size: 28px; text-align: center; margin-bottom: 20px;">${templateData.eventName || 'Event Invitation'}</h1>
           
           ${templateData.hostName ? `<p style="text-align: center; font-size: 14px; opacity: 0.8;">Hosted by ${templateData.hostName}</p>` : ''}
-          
+     
           <div style="background: rgba(212,168,73,0.1); padding: 20px; border-radius: 12px; margin: 30px 0;">
             ${templateData.date ? `<p><strong>📅 Date:</strong> ${new Date(templateData.date).toLocaleDateString()}</p>` : ''}
             ${templateData.time ? `<p><strong>⏰ Time:</strong> ${templateData.time}</p>` : ''}
@@ -120,7 +107,6 @@ const sendInvitations = async (req, res) => {
       `;
     };
 
-    // Check if email credentials are configured
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
       console.error('Email credentials not configured in .env file');
       return res.status(500).json({ 
@@ -139,7 +125,6 @@ const sendInvitations = async (req, res) => {
       });
     }
 
-    // Send emails to each guest
     const results = [];
     for (const guest of guestsWithEmail) {
       try {

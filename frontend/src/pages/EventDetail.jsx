@@ -23,7 +23,6 @@ export default function EventDetail() {
   const [deleteModal, setDeleteModal] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  // Fetch full event data on mount
   useEffect(() => {
     async function loadEvent() {
       if (id) {
@@ -36,7 +35,6 @@ export default function EventDetail() {
     loadEvent()
   }, [id, fetchEventById])
 
-  // Only show loading spinner on initial load
   if (loading) {
     return (
       <PageWrapper>
@@ -97,23 +95,18 @@ export default function EventDetail() {
     }
   }
 
-  // Optimistic update for adding expense
   async function handleAddExpense(expenseData) {
-    // Generate temporary ID for optimistic update
     const tempId = `temp_${Date.now()}`
     const optimisticExpense = { ...expenseData, id: tempId }
     
-    // Update UI immediately
     setEvent(prev => ({
       ...prev,
       expenses: [...(prev.expenses || []), optimisticExpense]
     }))
     
     try {
-      // Make actual API call
       const newExpense = await addExpense(id, expenseData)
       
-      // Replace temp expense with real one
       setEvent(prev => ({
         ...prev,
         expenses: prev.expenses.map(exp => 
@@ -121,7 +114,6 @@ export default function EventDetail() {
         )
       }))
     } catch (error) {
-      // If failed, remove the optimistic expense
       setEvent(prev => ({
         ...prev,
         expenses: prev.expenses.filter(exp => exp.id !== tempId)
@@ -131,12 +123,9 @@ export default function EventDetail() {
     }
   }
 
-  // Optimistic update for removing expense
   async function handleRemoveExpense(expenseId) {
-    // Store the expense being removed for potential rollback
     const removedExpense = event.expenses?.find(exp => exp.id === expenseId)
     
-    // Update UI immediately
     setEvent(prev => ({
       ...prev,
       expenses: (prev.expenses || []).filter(exp => exp.id !== expenseId)
@@ -145,7 +134,6 @@ export default function EventDetail() {
     try {
       await removeExpense(id, expenseId)
     } catch (error) {
-      // Rollback on failure
       setEvent(prev => ({
         ...prev,
         expenses: [...(prev.expenses || []), removedExpense]
@@ -155,39 +143,7 @@ export default function EventDetail() {
     }
   }
 
-  // // Optimistic update for adding guest
-  // async function handleAddGuest(guestData) {
-  //   const tempId = `temp_${Date.now()}`
-  //   const optimisticGuest = { ...guestData, id: tempId }
-  //     console.log('Optimistic guest:', optimisticGuest) // Debug
-
-  //   // Update UI immediately
-  //   setEvent(prev => ({
-  //     ...prev,
-  //     guests: [...(prev.guests || []), optimisticGuest]
-  //   }))
-    
-  //   try {
-  //     const newGuest = await addGuest(id, guestData)
-  //         console.log('API returned guest:', newGuest) // Debug - check what this returns
-
-  //     // Replace temp guest with real one
-  //     setEvent(prev => ({
-  //       ...prev,
-  //       guests: prev.guests.map(guest => 
-  //         guest.id === tempId ? newGuest : guest
-  //       )
-  //     }))
-  //   } catch (error) {
-  //     // Rollback on failure
-  //     setEvent(prev => ({
-  //       ...prev,
-  //       guests: prev.guests.filter(guest => guest.id !== tempId)
-  //     }))
-  //     console.error('Failed to add guest:', error)
-  //     alert('Failed to add guest. Please try again.')
-  //   }
-  // }
+  
 async function handleAddGuest(guestData) {
   try {
     const updatedGuests = await addGuest(id, guestData)
@@ -200,11 +156,9 @@ async function handleAddGuest(guestData) {
     console.error('Failed to add guest:', error)
   }
 }
-  // Optimistic update for removing guest
   async function handleRemoveGuest(guestId) {
     const removedGuest = event.guests?.find(guest => guest.id === guestId)
     
-    // Update UI immediately
     setEvent(prev => ({
       ...prev,
       guests: (prev.guests || []).filter(guest => guest.id !== guestId)
@@ -213,7 +167,6 @@ async function handleAddGuest(guestData) {
     try {
       await removeGuest(id, guestId)
     } catch (error) {
-      // Rollback on failure
       setEvent(prev => ({
         ...prev,
         guests: [...(prev.guests || []), removedGuest]

@@ -116,7 +116,6 @@ export default function App() {
   )
 }
 
-// If already logged in, skip landing and go to dashboard
 function LandingGuard() {
   const { user, loading } = useAuth()
   if (loading) return null
