@@ -4,6 +4,8 @@ const variants = {
   ghost:     'bg-transparent text-maroon border border-border hover:bg-champagne',
   danger:    'bg-burgundy text-offWhite border border-transparent hover:bg-wine shadow-sm',
   outline:   'bg-transparent text-wine border border-wine hover:bg-wine hover:text-offWhite',
+    light:    'bg-transparent/10 text-champagne border border-champagne/30 hover:bg-champagne/10 hover:text-offWhite backdrop-blur-sm',
+
 }
 
 const sizes = {

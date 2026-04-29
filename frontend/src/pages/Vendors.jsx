@@ -191,7 +191,7 @@ export default function Vendors() {
                 <h1 className="font-display text-3xl sm:text-4xl font-bold bg-gradient-to-r from-wine to-maroon bg-clip-text text-transparent">
                   Vendor Directory
                 </h1>
-                <p className="text-sm text-textLight mt-2 flex items-center gap-2">
+                <p className="text-sm text-textDark/80 mt-2 flex items-center gap-2">
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-sandGold animate-pulse"></span>
                   System vendors + your own trusted contacts
                 </p>
