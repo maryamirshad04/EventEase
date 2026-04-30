@@ -1,8 +1,10 @@
 import { formatCurrency } from '../../utils/formatCurrency'
 
-export default function ExpenseItem({ expense, onRemove, isAllocation, isVendorCost }) {
-  const { id, name, amount, vendorName } = expense
+export default function ExpenseItem({ expense, onRemove }) {
+  const { id, name, amount, vendorName, type } = expense
 
+  const isVendorCost = type === 'vendor'
+  const isAllocation = type === 'allocation'
   return (
     <div className={`flex items-center gap-3 px-4 py-2.5 group transition-colors
       ${isVendorCost ? 'bg-sandGold/5 hover:bg-sandGold/10' : 'bg-offWhite hover:bg-beige/40'}`}>

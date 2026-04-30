@@ -26,11 +26,16 @@ const addExpense = async (req, res) => {
     if (event.user.toString() !== req.user.id) {
       return res.status(401).json({ message: 'User not authorized' });
     }
+        console.log("BODY RECEIVED:", req.body); 
+
     const expense = await Expense.create({
       event: req.params.eventId,
       name: req.body.name,
       amount: req.body.amount,
       category: req.body.category,
+      type: req.body.type,
+      vendorId: req.body.vendorId || null,
+      vendorName: req.body.vendorName || null,
     });
 
     res.status(201).json(expense);

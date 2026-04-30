@@ -14,39 +14,39 @@ const EMPTY_FORM = { name: '', category: 'Catering', description: '', phone: '',
 function VendorForm({ initialData, onSubmit, onCancel }) {
   const [form, setForm] = useState(initialData || EMPTY_FORM)
   const [errors, setErrors] = useState({})
-  
-  function set(k) { 
-    return e => setForm(f => ({ ...f, [k]: e.target.value })) 
+
+  function set(k) {
+    return e => setForm(f => ({ ...f, [k]: e.target.value }))
   }
-  
+
   function validate() {
     const e = {}
     if (!form.name?.trim()) e.name = 'Vendor name required'
     if (!form.description?.trim()) e.description = 'Description required'
     if (!form.phone && !form.email) e.phone = 'At least phone or email required'
-    setErrors(e); 
+    setErrors(e);
     return Object.keys(e).length === 0
   }
-  
-  function handleSubmit(ev) { 
-    ev.preventDefault(); 
-    if (validate()) onSubmit(form) 
+
+  function handleSubmit(ev) {
+    ev.preventDefault();
+    if (validate()) onSubmit(form)
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <Input 
-        label="Vendor Name" 
-        value={form.name || ''} 
-        onChange={set('name')} 
-        error={errors.name} 
-        required 
-        placeholder="e.g. Gulshan Flowers" 
+      <Input
+        label="Vendor Name"
+        value={form.name || ''}
+        onChange={set('name')}
+        error={errors.name}
+        required
+        placeholder="e.g. Gulshan Flowers"
       />
       <div className="flex flex-col gap-1.5">
         <label className="text-sm font-medium text-textMid">Category <span className="text-burgundy">*</span></label>
-        <select 
-          value={form.category || 'Catering'} 
+        <select
+          value={form.category || 'Catering'}
           onChange={set('category')}
           className="w-full px-3 py-2.5 rounded-md bg-offWhite border border-border text-textDark text-sm focus:outline-none focus:ring-2 focus:ring-sandGold"
         >
@@ -55,37 +55,37 @@ function VendorForm({ initialData, onSubmit, onCancel }) {
           ))}
         </select>
       </div>
-      <Input 
-        label="Description" 
-        type="textarea" 
-        rows={2} 
-        value={form.description || ''} 
-        onChange={set('description')} 
-        error={errors.description} 
-        required 
-        placeholder="Brief description of services" 
+      <Input
+        label="Description"
+        type="textarea"
+        rows={2}
+        value={form.description || ''}
+        onChange={set('description')}
+        error={errors.description}
+        required
+        placeholder="Brief description of services"
       />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <Input 
-          label="Phone" 
-          value={form.phone || ''} 
-          onChange={set('phone')} 
-          error={errors.phone} 
-          placeholder="+92 300 1234567" 
+        <Input
+          label="Phone"
+          value={form.phone || ''}
+          onChange={set('phone')}
+          error={errors.phone}
+          placeholder="+92 300 1234567"
         />
-        <Input 
-          label="Email" 
-          type="email" 
-          value={form.email || ''} 
-          onChange={set('email')} 
-          placeholder="vendor@email.com" 
+        <Input
+          label="Email"
+          type="email"
+          value={form.email || ''}
+          onChange={set('email')}
+          placeholder="vendor@email.com"
         />
       </div>
-      <Input 
-        label="Price Range" 
-        value={form.priceRange || ''} 
-        onChange={set('priceRange')} 
-        placeholder="e.g. PKR 500–900 / head" 
+      <Input
+        label="Price Range"
+        value={form.priceRange || ''}
+        onChange={set('priceRange')}
+        placeholder="e.g. PKR 500–900 / head"
       />
       <div className="flex gap-3 pt-2">
         <Button type="submit" variant="primary" size="md" fullWidth>Save Vendor</Button>
@@ -106,33 +106,33 @@ export default function Vendors() {
 
   const filtered = useMemo(() => {
     if (!Array.isArray(vendors)) return []
-    
+
     return vendors.filter(v => {
       if (!v) return false
-      
-      const matchCat = category === 'All' || v?.category === category
-      
-      // Search filter
-      const matchSearch = !search || 
-        (v?.name && v.name.toLowerCase().includes(search.toLowerCase())) || 
-        (v?.description && v.description.toLowerCase().includes(search.toLowerCase()))
-      
-      return matchCat && matchSearch 
-    })
-  }, [vendors, category, search])  
 
-  function handleAdd(data) { 
-    addVendor(data); 
-    setShowAdd(false) 
+      const matchCat = category === 'All' || v?.category === category
+
+      // Search filter
+      const matchSearch = !search ||
+        (v?.name && v.name.toLowerCase().includes(search.toLowerCase())) ||
+        (v?.description && v.description.toLowerCase().includes(search.toLowerCase()))
+
+      return matchCat && matchSearch
+    })
+  }, [vendors, category, search])
+
+  function handleAdd(data) {
+    addVendor(data);
+    setShowAdd(false)
   }
-  
+
   function handleEdit(data) {
     if (editing?.id) {
-      updateVendor({ ...data, id: editing.id })
+      updateVendor(editing.id, data)
       setEditing(null)
     }
   }
-  
+
   function handleDelete() {
     if (deleteConfirm) {
       deleteVendor(deleteConfirm)
@@ -147,8 +147,8 @@ export default function Vendors() {
         <div className="mb-6">
           <div className="bg-gradient-to-r from-beige/80 to-offWhite/80 rounded-xl border border-wine/20 p-3 shadow-sm">
             <div className="flex items-center gap-2 text-sm">
-              <button 
-                onClick={() => navigate('/dashboard')} 
+              <button
+                onClick={() => navigate('/dashboard')}
                 className="flex items-center gap-1.5 hover:text-maroon transition-all duration-200 group cursor-pointer"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="group-hover:text-maroon">
@@ -172,7 +172,7 @@ export default function Vendors() {
             </div>
           </div>
         </div>
-        
+
         <div className="mb-8">
           <div className="bg-gradient-to-r from-wine/20 to-caramel/20 rounded-2xl border border-wine/60 p-6 shadow-sm">
             <div className="flex items-start justify-between flex-wrap gap-4">
@@ -196,10 +196,10 @@ export default function Vendors() {
                   System vendors + your own trusted contacts
                 </p>
               </div>
-              
+
               <Button variant="primary" size="md" onClick={() => setShowAdd(true)} className="shadow-sm hover:shadow-md transition-all self-start mt-2">
                 <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd"/>
+                  <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
                 </svg>
                 Add My Vendor
               </Button>
@@ -218,22 +218,22 @@ export default function Vendors() {
       <div className="bg-offWhite border border-border rounded-xl p-4 sm:p-5 mb-6 shadow-sm">
         <div className="relative mb-4">
           <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-textLight pointer-events-none" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"/>
+            <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
           </svg>
-          <input 
-            type="text" 
-            value={search} 
+          <input
+            type="text"
+            value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search vendors…"
             className="w-full pl-9 pr-4 py-2.5 rounded-md bg-beige border border-border text-textDark placeholder-textLight text-sm focus:outline-none focus:ring-2 focus:ring-sandGold transition-colors"
           />
           {search && (
-            <button 
-              onClick={() => setSearch('')} 
+            <button
+              onClick={() => setSearch('')}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-textLight hover:text-maroon transition-colors"
             >
               <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"/>
+                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
             </button>
           )}
@@ -249,7 +249,7 @@ export default function Vendors() {
             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12z" clipRule="evenodd" />
           </svg>
           <p className="text-sm text-textMid">
-            Showing <span className="font-bold text-wine text-base">{filtered.length}</span> 
+            Showing <span className="font-bold text-wine text-base">{filtered.length}</span>
             <span className="mx-1">vendor{filtered.length !== 1 ? 's' : ''}</span>
             {category !== 'All' && (
               <>
@@ -262,8 +262,8 @@ export default function Vendors() {
           </p>
         </div>
         {(search || category !== 'All') && (
-          <button 
-            onClick={() => { setSearch(''); setCategory('All') }} 
+          <button
+            onClick={() => { setSearch(''); setCategory('All') }}
             className="text-xs text-caramel hover:text-wine font-medium transition-colors"
           >
             Clear filters
@@ -276,7 +276,7 @@ export default function Vendors() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {filtered.map(v => (
             <VendorCard
-              key={v?.id || Math.random()} 
+              key={v?.id || Math.random()}
               vendor={v}
               onEdit={v?.isCustom ? () => setEditing(v) : undefined}
               onDelete={v?.isCustom ? () => setDeleteConfirm(v?.id) : undefined}
@@ -288,8 +288,8 @@ export default function Vendors() {
           <span className="text-4xl mb-4 block">🔍</span>
           <h3 className="font-display text-lg font-semibold text-maroon mb-2">No vendors found</h3>
           <p className="text-sm text-textMid mb-4">Try adjusting your search or clearing the filters</p>
-          <button 
-            onClick={() => { setSearch(''); setCategory('All') }} 
+          <button
+            onClick={() => { setSearch(''); setCategory('All') }}
             className="text-sm text-caramel hover:text-wine font-medium underline transition-colors"
           >
             Clear all filters
@@ -305,10 +305,10 @@ export default function Vendors() {
       {/* Edit Vendor Modal */}
       <Modal isOpen={!!editing} onClose={() => setEditing(null)} title="Edit Vendor">
         {editing && (
-          <VendorForm 
-            initialData={editing} 
-            onSubmit={handleEdit} 
-            onCancel={() => setEditing(null)} 
+          <VendorForm
+            initialData={editing}
+            onSubmit={handleEdit}
+            onCancel={() => setEditing(null)}
           />
         )}
       </Modal>

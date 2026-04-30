@@ -1,5 +1,7 @@
 export function calcSpent(expenses = []) {
-  return expenses.reduce((sum, e) => sum + Number(e.amount || 0), 0)
+  return expenses
+    .filter(e => e?.type === 'vendor') 
+    .reduce((sum, e) => sum + Number(e.amount || 0), 0)
 }
 
 export function calcRemaining(totalBudget, expenses = []) {

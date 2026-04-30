@@ -15,15 +15,15 @@ const AVATAR_COLORS = [
 ]
 
 export default function GuestList({ guests = [], onAdd, onRemove, readOnly = false }) {
-  const [name,      setName]      = useState('')
-  const [email,     setEmail]     = useState('')
-  const [nameErr,   setNameErr]   = useState('')
-  const [emailErr,  setEmailErr]  = useState('')
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [nameErr, setNameErr] = useState('')
+  const [emailErr, setEmailErr] = useState('')
 
   function validate() {
     let valid = true
-    if (!name.trim())  { setNameErr('Name is required');           valid = false } else setNameErr('')
-    if (!email.trim()) { setEmailErr('Email is required');         valid = false }
+    if (!name.trim()) { setNameErr('Name is required'); valid = false } else setNameErr('')
+    if (!email.trim()) { setEmailErr('Email is required'); valid = false }
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setEmailErr('Enter a valid email'); valid = false
     } else setEmailErr('')
@@ -35,9 +35,9 @@ export default function GuestList({ guests = [], onAdd, onRemove, readOnly = fal
     // onAdd?.({ id: `guest_${Date.now()}_${Math.random().toString(36).slice(2)}`,
     // name: name.trim(), email: email.trim() })
     onAdd?.({
-  name: name.trim(),
-  email: email.trim()
-})
+      name: name.trim(),
+      email: email.trim()
+    })
     setName(''); setEmail('')
   }
 
@@ -69,7 +69,7 @@ export default function GuestList({ guests = [], onAdd, onRemove, readOnly = fal
                   {!readOnly && (
                     <td className="px-4 py-3 text-right">
                       <button
-onClick={() => onRemove?.(g._id || g.id)}
+                        onClick={() => onRemove?.(g._id || g.id)}
                         className="text-textLight hover:text-burgundy transition-colors p-1 rounded"
                         aria-label="Remove guest"
                       >

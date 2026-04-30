@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import api from '../utils/api'
-import { mockVendors } from '../data/mockVendors'
 
 const VendorContext = createContext(null)
 function genTempId() { 
@@ -32,20 +31,11 @@ export function VendorProvider({ children, userId }) {
     }
   }, [userId])
 
-  const allVendors = [
-    ...mockVendors.map(v => ({ 
-      ...v, 
-      isCustom: false, 
-      source: 'default',
-      editable: false  
-    })),
-    ...backendVendors.map(v => ({ 
-      ...v, 
-      isCustom: true, 
-      source: 'backend',
-      editable: true   
-    }))
-  ]
+  const allVendors = backendVendors.map(v => ({
+  ...v,
+  isCustom: !v.isDefault,
+  editable: !v.isDefault
+}))
 
   const addVendor = async (vendorData) => {
     if (!userId) throw new Error('User not authenticated')
@@ -57,7 +47,8 @@ export function VendorProvider({ children, userId }) {
       isCustom: true,
       source: 'backend',
       editable: true,
-      isTemp: true 
+      isTemp: true ,
+      isDefault: false 
     }
     
     setBackendVendors(prev => [...prev, tempVendor])
@@ -80,7 +71,7 @@ export function VendorProvider({ children, userId }) {
     
     const vendor = backendVendors.find(v => v.id === id)
     if (!vendor) throw new Error('Vendor not found')
-    if (vendor.source === 'default') throw new Error('Cannot edit default vendors')
+  if (vendor.isDefault) throw new Error('Cannot edit default vendors')
     
     const oldVendor = { ...vendor }
     setBackendVendors(prev => 
@@ -133,7 +124,6 @@ export function VendorProvider({ children, userId }) {
     <VendorContext.Provider value={{ 
       vendors: allVendors,
       backendVendors,
-      defaultVendors: mockVendors,
       loading,
       error,
       fetchVendors,

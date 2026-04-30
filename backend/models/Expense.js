@@ -19,6 +19,13 @@ const expenseSchema = new mongoose.Schema({
     enum: ['Venue', 'Food', 'Decor', 'Photography', 'Miscellaneous', 'Entertainment', 'Florist'],
     required: true,
   },
+  type: {
+    type: String,
+    enum: ['allocation', 'vendor'],
+    required: true
+  },
+  vendorId: { type: mongoose.Schema.Types.ObjectId, ref: 'Vendor' },
+  vendorName: String
 }, { timestamps: true });
 
 expenseSchema.set('toJSON', {

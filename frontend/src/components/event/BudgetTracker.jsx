@@ -44,10 +44,11 @@ export default function BudgetTracker({ event, onAddExpense, onRemoveExpense }) 
   function handleAddExpense() {
     if (!validateAdd()) return
     if (onAddExpense) {
-      onAddExpense({ 
-        name: addForm.name.trim(), 
-        amount: Number(addForm.amount), 
-        category: addForm.category 
+      onAddExpense({
+        name: addForm.name.trim(),
+        amount: Number(addForm.amount),
+        category: addForm.category,
+        type: 'allocation'
       })
     }
     setAddForm({ name: '', amount: '', category: 'Food' })
@@ -66,7 +67,7 @@ export default function BudgetTracker({ event, onAddExpense, onRemoveExpense }) 
         category: vendorModal?.expenseCategory || 'Miscellaneous',
         vendorId,
         vendorName,
-        isVendorCost: true,
+        type: 'vendor'
       })
     }
     setVendorModal(null)
@@ -75,16 +76,14 @@ export default function BudgetTracker({ event, onAddExpense, onRemoveExpense }) 
   // Open vendor picker for a category
   function openVendorPicker(category) {
     if (!category) return
-    
-    const catBudget = categorySpent([], category) // we want the allocated budget, not spent
-    // Find the expense allocation for this category (the user-set amount, not vendor costs)
+
     const categoryAllocation = expenses
-      .filter(ex => ex?.category === category && !ex?.isVendorCost)
+      .filter(ex => ex?.category === category && ex?.type === 'allocation')
       .reduce((sum, ex) => sum + Number(ex?.amount || 0), 0)
-    
-    setVendorModal({ 
-      expenseCategory: category, 
-      expenseBudget: categoryAllocation 
+
+    setVendorModal({
+      expenseCategory: category,
+      expenseBudget: categoryAllocation
     })
   }
 
@@ -132,7 +131,7 @@ export default function BudgetTracker({ event, onAddExpense, onRemoveExpense }) 
           </h4>
           <Button variant="ghost" size="sm" onClick={() => setShowAddForm(v => !v)}>
             <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd"/>
+              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
             </svg>
             Add Budget Line
           </Button>
@@ -184,12 +183,12 @@ export default function BudgetTracker({ event, onAddExpense, onRemoveExpense }) 
             {Object.entries(grouped).map(([category, catExpenses]) => {
               // Safely filter expenses
               const safeCatExpenses = Array.isArray(catExpenses) ? catExpenses : []
-              
-              const allocations = safeCatExpenses.filter(ex => !ex?.isVendorCost)
-              const vendorCosts = safeCatExpenses.filter(ex => ex?.isVendorCost)
-              const totalAlloc  = allocations.reduce((s, ex) => s + Number(ex?.amount || 0), 0)
+
+              const allocations = safeCatExpenses.filter(ex => ex?.type === 'allocation')
+              const vendorCosts = safeCatExpenses.filter(ex => ex?.type === 'vendor')
+              const totalAlloc = allocations.reduce((s, ex) => s + Number(ex?.amount || 0), 0)
               const totalVendor = vendorCosts.reduce((s, ex) => s + Number(ex?.amount || 0), 0)
-              const catOver     = totalAlloc > 0 && totalVendor > totalAlloc
+              const catOver = totalAlloc > 0 && totalVendor > totalAlloc
 
               return (
                 <div key={category} className="border border-border rounded-xl overflow-hidden">
@@ -200,7 +199,7 @@ export default function BudgetTracker({ event, onAddExpense, onRemoveExpense }) 
                       {catOver && (
                         <span className="flex items-center gap-1 text-[10px] font-semibold text-burgundy bg-burgundy/10 border border-burgundy/20 px-2 py-0.5 rounded-full">
                           <svg className="w-2.5 h-2.5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
+                            <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                           </svg>
                           Over by {formatCurrency(totalVendor - totalAlloc)}
                         </span>
@@ -212,7 +211,7 @@ export default function BudgetTracker({ event, onAddExpense, onRemoveExpense }) 
                       className="flex items-center gap-1.5 text-[11px] font-semibold text-maroon hover:text-wine bg-offWhite border border-border hover:border-caramel/50 px-2.5 py-1 rounded-full transition-all"
                     >
                       <svg className="w-3 h-3" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9z"/>
+                        <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9z" />
                       </svg>
                       Select Vendor
                     </button>
@@ -221,19 +220,17 @@ export default function BudgetTracker({ event, onAddExpense, onRemoveExpense }) 
                   {/* Allocation lines */}
                   <div className="divide-y divide-border/40">
                     {allocations.map(ex => (
-                      <ExpenseItem 
-                        key={ex?.id || Math.random()} 
-                        expense={ex || {}} 
-                        onRemove={onRemoveExpense} 
-                        isAllocation 
+                      <ExpenseItem
+                        key={ex?.id || Math.random()}
+                        expense={ex || {}}
+                        onRemove={onRemoveExpense}
                       />
                     ))}
                     {vendorCosts.map(ex => (
-                      <ExpenseItem 
-                        key={ex?.id || Math.random()} 
-                        expense={ex || {}} 
-                        onRemove={onRemoveExpense} 
-                        isVendorCost 
+                      <ExpenseItem
+                        key={ex?.id || Math.random()}
+                        expense={ex || {}}
+                        onRemove={onRemoveExpense}
                       />
                     ))}
                   </div>

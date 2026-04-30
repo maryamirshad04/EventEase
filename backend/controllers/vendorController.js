@@ -3,10 +3,18 @@ const Vendor = require('../models/Vendor');
 const getVendors = async (req, res) => {
   try {
     const { category } = req.query;
-    let query = { user: req.user.id };
+
+    let query = {
+      $or: [
+        { user: req.user.id },  
+        { isDefault: true }       
+      ]
+    };
+
     if (category) {
       query.category = category;
     }
+
     const vendors = await Vendor.find(query);
     res.json(vendors);
   } catch (error) {
@@ -53,7 +61,9 @@ const createVendor = async (req, res) => {
 const updateVendor = async (req, res) => {
   try {
     const vendor = await Vendor.findById(req.params.id);
-    
+    if (vendor.isDefault) {
+  return res.status(403).json({ message: 'Cannot modify default vendor' });
+}
     if (!vendor) {
       return res.status(404).json({ message: 'Vendor not found' });
     }
@@ -77,7 +87,9 @@ const updateVendor = async (req, res) => {
 const deleteVendor = async (req, res) => {
   try {
     const vendor = await Vendor.findById(req.params.id);
-    
+    if (vendor.isDefault) {
+  return res.status(403).json({ message: 'Cannot modify default vendor' });
+}
     if (!vendor) {
       return res.status(404).json({ message: 'Vendor not found' });
     }
