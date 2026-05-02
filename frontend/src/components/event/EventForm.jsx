@@ -5,6 +5,15 @@ import GuestList from './GuestList'
 
 const emptyForm = { name: '', date: '', time: '', location: '', description: '', totalBudget: '' }
 
+const Section = ({ title, children }) => (
+  <div className="space-y-4">
+    <h3 className="text-sm font-semibold text-textMid uppercase tracking-wide border-l-4 border-caramel pl-3">
+      {title}
+    </h3>
+    {children}
+  </div>
+)
+
 export default function EventForm({ initialData = null, onSubmit, onCancel }) {
   const [form, setForm] = useState(initialData ? {
     name: initialData.name || '',
@@ -60,14 +69,7 @@ export default function EventForm({ initialData = null, onSubmit, onCancel }) {
     setGuests(prev => prev.filter(g => g.id !== id))
   }
 
-  const Section = ({ title, children }) => (
-    <div className="space-y-4">
-      <h3 className="text-sm font-semibold text-textMid uppercase tracking-wide border-l-4 border-caramel pl-3">
-        {title}
-      </h3>
-      {children}
-    </div>
-  )
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">

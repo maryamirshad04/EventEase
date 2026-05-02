@@ -6,7 +6,7 @@ import Button from '../components/ui/Button'
 import { useEvents } from '../hooks/useEvents'
 import { useAuth } from '../context/AuthContext'
 import { formatDate, formatTime, daysUntil } from '../utils/formatDate'
-
+import { SparklesIcon } from "@heroicons/react/24/solid";
 function EmptyState() {
   return (
     <div className="animate-fade-in">
@@ -61,7 +61,7 @@ function EmptyState() {
             </div>
             <h3 className="font-display text-lg font-semibold text-maroon mb-2">Add event details</h3>
             <p className="text-textLight text-sm leading-relaxed">
-              Name your event, set the date and time — give your celebration an identity.
+              Name your event, set the date and time - give your celebration an identity.
             </p>
             <div className="mt-3 text-xs text-sandGold font-medium flex items-center gap-1">
               <span>Step 1 of 3</span>
@@ -189,7 +189,9 @@ function HeroBanner({ event }) {
         <div className="flex flex-col items-start sm:items-end gap-3 flex-shrink-0">
           {days !== null && days >= 0 && (
             <div className="text-center">
-              <p className="font-display text-4xl font-bold text-sandGold">{days === 0 ? '🎉' : days}</p>
+<p className="font-display text-4xl font-bold text-sandGold">
+  {days === 0 ? <SparklesIcon className="w-10 h-10" /> : days}
+</p>
               <p className="text-champagne/70 text-xs uppercase tracking-wide">{days === 0 ? 'Today!' : 'days away'}</p>
             </div>
           )}
