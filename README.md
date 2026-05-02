@@ -1,11 +1,64 @@
-# EventEase
+# ✨ EventEase
 
-EventEase is a full-stack web application featuring a React-based frontend powered by Vite and a Node.js/Express backend.
+> A modern event management platform engineered for clarity, scalability, and seamless user experience.
 
-## 📂 Project Structure
+EventEase is a full-stack event management system designed to simplify how users create, organize, and manage events in real time. Built with a **React + Vite frontend** and a **Node.js/Express backend**, it follows a modular architecture that prioritizes scalability, clean separation of concerns, and developer experience.
 
-The workspace is organized into two main directories: `frontend` and `backend`.
+---
 
+## 🌐 Vision
+
+Event management tools are often either overly complex or too simplistic.
+
+**EventEase bridges that gap.**
+
+It focuses on:
+- ⚡ Fast event creation flow
+- 🧠 Intuitive UX with minimal friction
+- 🔐 Secure backend architecture
+- 📦 Clean modular design for future scaling (notifications, analytics, invites, etc.)
+
+---
+## 🖥️ Dashboard Preview
+
+![Dashboard](./assets/dashboard.png)
+
+## ✨ Events Page
+
+![Create Event](./assets/Allevents.png)
+![Event Details](./assets/EventDetails.png)
+
+## ✨ Invitation Page
+
+![Invitation](./assets/InvitationCard.png)
+
+## ✨ Budgets Page
+
+![Invitation](./assets/BudgetOverview.png)
+
+## ✨ Vendors Page
+
+![Invitation](./assets/VendorsPage.png)
+
+---
+
+## 🏗️ System Architecture
+
+EventEase follows a **client-server architecture** with clear separation between UI, business logic, and data layer.
+
+```text
+Frontend (React + Vite)
+        │
+        ▼
+REST API Layer (Express.js)
+        │
+        ▼
+Controller Layer (Business Logic)
+        │
+        ▼
+```
+
+Database Layer (MongoDB via Mongoose)
 ```text
 EventEase/
 ├── backend/                # Node.js & Express backend
