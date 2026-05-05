@@ -3,10 +3,8 @@ import { AuthProvider, useAuth } from './context/AuthContext'
 import { EventProvider } from './context/EventContext'
 import { VendorProvider } from './context/VendorContext'
 import Navbar from './components/layout/Navbar'
-// Remove the import - we don't need it for public folder files
 import { ToastProvider } from './components/ui/ToastContainer' 
 
-// Pages
 import Landing from './pages/Landing'
 import Dashboard from './pages/Dashboard'
 import CreateEvent from './pages/CreateEvent'
@@ -16,7 +14,6 @@ import Vendors from './pages/Vendors'
 import InvitationBuilder from './pages/InvitationBuilder'
 import NotFound from './pages/NotFound'
 
-// Protected route: redirect to / if not logged in
 function Protected({ children }) {
   const { user, loading } = useAuth()
   if (loading) {
@@ -36,7 +33,6 @@ function Protected({ children }) {
   return children
 }
 
-// App shell (with navbar + providers that need userId)
 function AppShell() {
   const { user } = useAuth()
   

@@ -12,8 +12,8 @@ function EmptyState() {
     <div className="animate-fade-in">
       {/* Hero Image Section */}
       <div className="relative mb-8 rounded-2xl overflow-hidden">
-        <img 
-          src="/assets/download.jfif" 
+        <img
+          src="/assets/download.jfif"
           alt="Start planning your first event"
           className="w-full h-64 object-cover"
         />
@@ -43,10 +43,10 @@ function EmptyState() {
       {/* Guided Steps */}
       <div className="max-w-3xl mx-auto">
         <p className="text-center text-sm text-wine mb-6 font-medium">
-  <span className="inline-block px-4 py-1.5 rounded-full border border-sandGold/30 bg-offWhite/30">
-    Follow these simple steps to get started:
-  </span>
-</p>
+          <span className="inline-block px-4 py-1.5 rounded-full border border-sandGold/30 bg-offWhite/30">
+            Follow these simple steps to get started:
+          </span>
+        </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Step 1 - Event Details */}
           <div className="bg-offWhite rounded-xl p-5 border border-border hover:shadow-md transition-all group">
@@ -116,39 +116,39 @@ function EmptyState() {
 
         {/* Decorative Element */}
         <div className="mt-8 text-center">
-  <div className="relative max-w-md mx-auto">
-    {/* Top border with decorative ends */}
-    <div className="absolute top-0 left-0 right-0 flex justify-between items-center">
-      <div className="w-12 h-px bg-gradient-to-r from-transparent to-sandGold"></div>
-      <div className="w-2 h-2 rotate-45 bg-sandGold/60"></div>
-      <div className="w-24 h-px bg-sandGold/40"></div>
-      <div className="w-2 h-2 rotate-45 bg-sandGold/60"></div>
-      <div className="w-12 h-px bg-gradient-to-l from-transparent to-sandGold"></div>
-    </div>
-    
-    {/* Main content */}
-    <div className="py-4 px-6">
-      <div className="inline-flex items-center gap-3 text-xs text-wine bg-offWhite/50 px-4 py-2 rounded-full border border-sandGold/20">
-        <svg className="w-3 h-3 text-sandGold" viewBox="0 0 20 20" fill="currentColor">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-        </svg>
-        <span className="font-medium">Ready to begin?</span>
-        <svg className="w-3 h-3 text-sandGold" viewBox="0 0 20 20" fill="currentColor">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-        </svg>
-      </div>
-    </div>
-    
-    {/* Bottom border with decorative ends */}
-    <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center">
-      <div className="w-12 h-px bg-gradient-to-r from-transparent to-sandGold"></div>
-      <div className="w-2 h-2 rotate-45 bg-sandGold/60"></div>
-      <div className="w-24 h-px bg-sandGold/40"></div>
-      <div className="w-2 h-2 rotate-45 bg-sandGold/60"></div>
-      <div className="w-12 h-px bg-gradient-to-l from-transparent to-sandGold"></div>
-    </div>
-  </div>
-</div>
+          <div className="relative max-w-md mx-auto">
+            {/* Top border with decorative ends */}
+            <div className="absolute top-0 left-0 right-0 flex justify-between items-center">
+              <div className="w-12 h-px bg-gradient-to-r from-transparent to-sandGold"></div>
+              <div className="w-2 h-2 rotate-45 bg-sandGold/60"></div>
+              <div className="w-24 h-px bg-sandGold/40"></div>
+              <div className="w-2 h-2 rotate-45 bg-sandGold/60"></div>
+              <div className="w-12 h-px bg-gradient-to-l from-transparent to-sandGold"></div>
+            </div>
+
+            {/* Main content */}
+            <div className="py-4 px-6">
+              <div className="inline-flex items-center gap-3 text-xs text-wine bg-offWhite/50 px-4 py-2 rounded-full border border-sandGold/20">
+                <svg className="w-3 h-3 text-sandGold" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+                <span className="font-medium">Ready to begin?</span>
+                <svg className="w-3 h-3 text-sandGold" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Bottom border with decorative ends */}
+            <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center">
+              <div className="w-12 h-px bg-gradient-to-r from-transparent to-sandGold"></div>
+              <div className="w-2 h-2 rotate-45 bg-sandGold/60"></div>
+              <div className="w-24 h-px bg-sandGold/40"></div>
+              <div className="w-2 h-2 rotate-45 bg-sandGold/60"></div>
+              <div className="w-12 h-px bg-gradient-to-l from-transparent to-sandGold"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -162,10 +162,10 @@ function HeroBanner({ event }) {
       <div className="absolute inset-0 bg-gradient-to-br from-wine via-maroon to-burgundy" />
       <div className="absolute inset-0 opacity-10"
         style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23D4A849' stroke-width='0.5'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3Ccircle cx='30' cy='30' r='12'/%3E%3Cpath d='M30 10 L30 50 M10 30 L50 30'/%3E%3C/g%3E%3C/svg%3E\")" }} />
-      <div className="absolute top-4 left-4 w-8 h-8 opacity-40" style={{ borderTop:'2px solid #D4A849', borderLeft:'2px solid #D4A849' }} />
-      <div className="absolute top-4 right-4 w-8 h-8 opacity-40" style={{ borderTop:'2px solid #D4A849', borderRight:'2px solid #D4A849' }} />
-      <div className="absolute bottom-4 left-4 w-8 h-8 opacity-40" style={{ borderBottom:'2px solid #D4A849', borderLeft:'2px solid #D4A849' }} />
-      <div className="absolute bottom-4 right-4 w-8 h-8 opacity-40" style={{ borderBottom:'2px solid #D4A849', borderRight:'2px solid #D4A849' }} />
+      <div className="absolute top-4 left-4 w-8 h-8 opacity-40" style={{ borderTop: '2px solid #D4A849', borderLeft: '2px solid #D4A849' }} />
+      <div className="absolute top-4 right-4 w-8 h-8 opacity-40" style={{ borderTop: '2px solid #D4A849', borderRight: '2px solid #D4A849' }} />
+      <div className="absolute bottom-4 left-4 w-8 h-8 opacity-40" style={{ borderBottom: '2px solid #D4A849', borderLeft: '2px solid #D4A849' }} />
+      <div className="absolute bottom-4 right-4 w-8 h-8 opacity-40" style={{ borderBottom: '2px solid #D4A849', borderRight: '2px solid #D4A849' }} />
 
       <div className="relative px-6 py-8 sm:px-10 sm:py-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div>
@@ -189,9 +189,9 @@ function HeroBanner({ event }) {
         <div className="flex flex-col items-start sm:items-end gap-3 flex-shrink-0">
           {days !== null && days >= 0 && (
             <div className="text-center">
-<p className="font-display text-4xl font-bold text-sandGold">
-  {days === 0 ? <SparklesIcon className="w-10 h-10" /> : days}
-</p>
+              <p className="font-display text-4xl font-bold text-sandGold">
+                {days === 0 ? <SparklesIcon className="w-10 h-10" /> : days}
+              </p>
               <p className="text-champagne/70 text-xs uppercase tracking-wide">{days === 0 ? 'Today!' : 'days away'}</p>
             </div>
           )}
@@ -202,8 +202,8 @@ function HeroBanner({ event }) {
             <Link to={`/events/${event.id}/invite`}>
               <Button variant="light" size="sm" >
                 <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
-                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                 </svg>
                 Invite
               </Button>
@@ -223,7 +223,7 @@ function QuickActions({ events }) {
         className="group flex items-center gap-4 bg-offWhite border border-border rounded-xl p-4 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
         <div className="w-10 h-10 rounded-lg bg-wine/10 flex items-center justify-center flex-shrink-0 group-hover:bg-wine/20 transition-colors">
           <svg className="w-5 h-5 text-wine" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd"/>
+            <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
           </svg>
         </div>
         <div>
@@ -238,8 +238,8 @@ function QuickActions({ events }) {
           className="group flex items-center gap-4 bg-offWhite border border-border rounded-xl p-4 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
           <div className="w-10 h-10 rounded-lg bg-sandGold/15 flex items-center justify-center flex-shrink-0 group-hover:bg-sandGold/25 transition-colors">
             <svg className="w-5 h-5 text-caramel" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
-              <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+              <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+              <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
             </svg>
           </div>
           <div>
@@ -253,7 +253,7 @@ function QuickActions({ events }) {
         className="group flex items-center gap-4 bg-offWhite border border-border rounded-xl p-4 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
         <div className="w-10 h-10 rounded-lg bg-olive/10 flex items-center justify-center flex-shrink-0 group-hover:bg-olive/20 transition-colors">
           <svg className="w-5 h-5 text-olive" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clipRule="evenodd"/>
+            <path fillRule="evenodd" d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clipRule="evenodd" />
           </svg>
         </div>
         <div>
@@ -283,24 +283,24 @@ export default function Dashboard() {
   return (
     <PageWrapper>
       {/* Greeting Card */}
-<div className="mb-8">
-  <div className="bg-gradient-to-r from-wine/20 to-caramel/20 rounded-2xl border border-wine/60 p-6 shadow-sm">
-    <div className="flex items-center gap-3 mb-2">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#7B2340" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-        <circle cx="12" cy="7" r="4"></circle>
-      </svg>
-      <p className="text-xs text-wine/70 uppercase tracking-widest font-semibold">Welcome back</p>
-    </div>
-    <h1 className="font-display text-3xl sm:text-4xl font-bold bg-gradient-to-r from-wine to-maroon bg-clip-text text-transparent">
-      {user?.name || 'Planner'}
-    </h1>
-<p className="text-sm text-textDark/80 mt-2 flex items-center gap-2">
-  <span className="inline-block w-1.5 h-1.5 rounded-full animate-pulse bg-textDark"></span>
-  Ready to plan your next celebration?
-</p>
-  </div>
-</div>
+      <div className="mb-8">
+        <div className="bg-gradient-to-r from-wine/20 to-caramel/20 rounded-2xl border border-wine/60 p-6 shadow-sm">
+          <div className="flex items-center gap-3 mb-2">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#7B2340" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <p className="text-xs text-wine/70 uppercase tracking-widest font-semibold">Welcome back</p>
+          </div>
+          <h1 className="font-display text-3xl sm:text-4xl font-bold bg-gradient-to-r from-wine to-maroon bg-clip-text text-transparent">
+            {user?.name || 'Planner'}
+          </h1>
+          <p className="text-sm text-textDark/80 mt-2 flex items-center gap-2">
+            <span className="inline-block w-1.5 h-1.5 rounded-full animate-pulse bg-textDark"></span>
+            Ready to plan your next celebration?
+          </p>
+        </div>
+      </div>
 
       {events.length === 0 ? (
         <EmptyState />
@@ -313,75 +313,75 @@ export default function Dashboard() {
           </section>
 
           {/* Upcoming Events Card */}
-<section className="mb-10">
-  <div className="bg-offWhite/80 rounded-2xl border border-border shadow-sm overflow-hidden">
-    {/* Header with gradient */}
-    <div className="bg-gradient-to-r from-beige to-champagne px-6 py-4 border-b border-border">
-      <div className="flex items-center justify-between flex-wrap gap-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-wine/10 flex items-center justify-center">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7B2340" strokeWidth="1.8">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="16" y1="2" x2="16" y2="6"></line>
-              <line x1="8" y1="2" x2="8" y2="6"></line>
-              <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-          </div>
-          <div>
-            <h2 className="font-display text-xl font-semibold text-maroon">Upcoming Events</h2>
-            <div className="flex items-center gap-2 mt-0.5">
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-wine/10 text-wine text-xs font-medium">
-                {upcomingEvents.length} {upcomingEvents.length === 1 ? 'event' : 'events'} planned
-              </span>
-              {upcomingEvents.length > 0 && (
-                <span className="text-xs text-textLight">
-                  • Next: {upcomingEvents[0]?.date ? new Date(upcomingEvents[0].date).toLocaleDateString() : 'Soon'}
-                </span>
-              )}
+          <section className="mb-10">
+            <div className="bg-offWhite/80 rounded-2xl border border-border shadow-sm overflow-hidden">
+              {/* Header with gradient */}
+              <div className="bg-gradient-to-r from-beige to-champagne px-6 py-4 border-b border-border">
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-wine/10 flex items-center justify-center">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7B2340" strokeWidth="1.8">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 className="font-display text-xl font-semibold text-maroon">Upcoming Events</h2>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-wine/10 text-wine text-xs font-medium">
+                          {upcomingEvents.length} {upcomingEvents.length === 1 ? 'event' : 'events'} planned
+                        </span>
+                        {upcomingEvents.length > 0 && (
+                          <span className="text-xs text-textLight">
+                            • Next: {upcomingEvents[0]?.date ? new Date(upcomingEvents[0].date).toLocaleDateString() : 'Soon'}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <Button variant="primary" size="sm" onClick={() => navigate('/events/new')} className="shadow-sm hover:shadow-md transition-shadow">
+                    <svg className="w-4 h-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                    </svg>
+                    New Event
+                  </Button>
+                </div>
+              </div>
+
+              {/* Events content */}
+              <div className="p-6">
+                {upcomingEvents.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {upcomingEvents.map(e => <EventCard key={e.id} event={e} />)}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-beige/50 flex items-center justify-center">
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="1.5">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                      </svg>
+                    </div>
+                    <p className="text-textLight text-base mb-2">No upcoming events</p>
+                    <p className="text-sm text-textLight/70 mb-4">Start planning your next celebration</p>
+                    <Link
+                      to="/events/new"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-maroon text-white rounded-lg hover:bg-wine transition-colors text-sm font-medium"
+                    >
+                      <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                      </svg>
+                      Create Your First Event
+                    </Link>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </div>
-        <Button variant="primary" size="sm" onClick={() => navigate('/events/new')} className="shadow-sm hover:shadow-md transition-shadow">
-          <svg className="w-4 h-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd"/>
-          </svg>
-          New Event
-        </Button>
-      </div>
-    </div>
-    
-    {/* Events content */}
-    <div className="p-6">
-      {upcomingEvents.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {upcomingEvents.map(e => <EventCard key={e.id} event={e} />)}
-        </div>
-      ) : (
-        <div className="text-center py-12">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-beige/50 flex items-center justify-center">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="1.5">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="16" y1="2" x2="16" y2="6"></line>
-              <line x1="8" y1="2" x2="8" y2="6"></line>
-              <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-          </div>
-          <p className="text-textLight text-base mb-2">No upcoming events</p>
-          <p className="text-sm text-textLight/70 mb-4">Start planning your next celebration</p>
-          <Link 
-            to="/events/new" 
-            className="inline-flex items-center gap-2 px-4 py-2 bg-maroon text-white rounded-lg hover:bg-wine transition-colors text-sm font-medium"
-          >
-            <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd"/>
-            </svg>
-            Create Your First Event
-          </Link>
-        </div>
-      )}
-    </div>
-  </div>
-</section>
+          </section>
 
           {/* Past */}
           {pastEvents.length > 0 && (

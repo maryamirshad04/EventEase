@@ -14,7 +14,6 @@ export function AuthProvider({ children }) {
         if (stored) {
           const session = JSON.parse(stored)
           if (session && session.token) {
-            // Validate token and get fresh user data
             const res = await api.get('/auth/me');
             setUser({ ...res.data, token: session.token })
           }
@@ -49,9 +48,7 @@ export function AuthProvider({ children }) {
     } catch (err) {
   console.error('Login error:', err)
   console.log('Full error response:', err.response?.data) 
-  
-  // Try different possible error response formats
-  const errorMessage = err.response?.data?.message 
+    const errorMessage = err.response?.data?.message 
     || err.response?.data?.error 
     || err.response?.data 
     || 'Incorrect email or password.'
