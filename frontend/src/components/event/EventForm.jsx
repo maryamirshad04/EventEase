@@ -51,6 +51,7 @@ export default function EventForm({ initialData = null, onSubmit, onCancel }) {
     try {
       await onSubmit?.({
         ...form,
+        datetime: `${form.date}T${form.time}`,
         totalBudget: Number(form.totalBudget),
         guests,
         expenses: initialData?.expenses || [],
