@@ -115,7 +115,8 @@ export default function Vendors() {
       // Search filter
       const matchSearch = !search ||
         (v?.name && v.name.toLowerCase().includes(search.toLowerCase())) ||
-        (v?.description && v.description.toLowerCase().includes(search.toLowerCase()))
+        (v?.description && v.description.toLowerCase().includes(search.toLowerCase())) ||
+        (v?.phone && v.phone.replaceAll(' ','').includes(search.replaceAll(' ','')))
 
       return matchCat && matchSearch
     })
