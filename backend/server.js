@@ -12,7 +12,15 @@ const invitationRoutes = require('./routes/invitationRoutes');
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: 'https://doppleganger-xi.vercel.app',  // your frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+
+// Explicitly handle preflight for all routes
+app.options('*', cors());
 app.use(express.json());
 
 // Routes
