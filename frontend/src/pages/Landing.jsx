@@ -509,7 +509,7 @@ export default function Landing() {
             Event<span style={{ color:'#C47D3E' }}>Ease</span>
           </span>
         </div>
-        <p style={{ fontSize:11, color:'#8B6B52', fontFamily:'Inter,sans-serif' }}>Ayka Imran & Maryam Irshad · 23L-3051 & 23L-3093 · 2026</p>
+        <p style={{ fontSize:11, color:'#8B6B52', fontFamily:'Inter,sans-serif' }}>Ayka Imran & Maryam Irshad · 2026</p>
         <p style={{ fontSize:11, color:'#C9A84C', fontFamily:'Inter,sans-serif' }}>v1.0 ✦ 2026</p>
       </footer>
 
