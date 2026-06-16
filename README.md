@@ -6,6 +6,11 @@ EventEase is a full-stack event management system designed to simplify how users
 
 ---
 
+## 🌐 Live Demo
+Experience EventEase in action: **[https://eventease-xi.vercel.app/](https://eventease-xi.vercel.app/)**
+
+---
+
 ## 🌐 Vision
 
 Event management tools are often either overly complex or too simplistic.
