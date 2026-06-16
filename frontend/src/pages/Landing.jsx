@@ -149,8 +149,6 @@ async function handleSubmit(e) {
         <div style={{ padding:'28px 32px' }}>
           <div style={{ display:'flex', flexDirection:'column', alignItems:'center', marginBottom:20 }}>
             <div style={{ position:'relative', width:36, height:36, marginBottom:12 }}>
-              <div style={{ position:'absolute', inset:0, transform:'rotate(45deg)', borderRadius:4, background:'#7B2340' }}/>
-              <div style={{ position:'absolute', inset:6, transform:'rotate(45deg)', borderRadius:3, background:'#C9A84C' }}/>
             </div>
             <h2 style={{ fontFamily:'Playfair Display,serif', color:'#5C1A2E', fontSize:22, fontWeight:700, margin:0 }}>
               {mode==='login' ? 'Welcome Back' : 'Create Account'}
