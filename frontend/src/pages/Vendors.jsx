@@ -143,43 +143,49 @@ export default function Vendors() {
 
   return (
     <PageWrapper>
-      {/* Header */}
-      <div className="mb-8">
-        <div className="mb-6">
-          <div className="bg-gradient-to-r from-beige/80 to-offWhite/80 rounded-xl border border-wine/20 p-3 shadow-sm">
-            <div className="flex items-center gap-2 text-sm">
-              <button
-                onClick={() => navigate('/dashboard')}
-                className="flex items-center gap-1.5 hover:text-maroon transition-all duration-200 group cursor-pointer"
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="group-hover:text-maroon">
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                </svg>
-                <span className="text-textMid hover:text-maroon transition-colors">Dashboard</span>
-              </button>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="2" className="flex-shrink-0">
-                <polyline points="9 18 15 12 9 6"></polyline>
+      {/* Breadcrumb */}
+      <div className="mb-6">
+        <div className="bg-gradient-to-r from-beige/80 to-offWhite/80 rounded-xl border border-wine/20 p-3 shadow-sm">
+          <div className="flex items-center gap-2 text-sm">
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="flex items-center gap-1.5 hover:text-maroon transition-all duration-200 group cursor-pointer"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="group-hover:text-maroon">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
               </svg>
-              <div className="flex items-center gap-1.5">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7B2340" strokeWidth="1.8" className="flex-shrink-0">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                  <polyline points="22,6 12,13 2,6"></polyline>
-                  <circle cx="6" cy="18" r="1" fill="#C9A84C"></circle>
-                  <circle cx="18" cy="18" r="1" fill="#C9A84C"></circle>
-                </svg>
-                <span className="text-wine font-semibold bg-wine/10 px-2 py-0.5 rounded-md">Vendor Directory</span>
-              </div>
+              <span className="text-textMid hover:text-maroon transition-colors">Dashboard</span>
+            </button>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="2" className="flex-shrink-0">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <div className="flex items-center gap-1.5">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7B2340" strokeWidth="1.8" className="flex-shrink-0">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+                <circle cx="6" cy="18" r="1" fill="#C9A84C"></circle>
+                <circle cx="18" cy="18" r="1" fill="#C9A84C"></circle>
+              </svg>
+              <span className="text-wine font-semibold bg-wine/10 px-2 py-0.5 rounded-md">Vendor Directory</span>
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="mb-8">
-          <div className="bg-gradient-to-r from-wine/20 to-caramel/20 rounded-2xl border border-wine/60 p-6 shadow-sm">
+      {/* Redesigned Vendor Banner - matching Dashboard style */}
+      <div className="mb-8">
+        <div className="relative">
+          {/* Subtle gradient background overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-wine/5 to-transparent rounded-2xl"></div>
+          
+          {/* Main card with visible backdrop */}
+          <div className="relative p-5 rounded-2xl border border-wine/20 bg-offWhite/40 backdrop-blur-sm shadow-sm">
             <div className="flex items-start justify-between flex-wrap gap-4">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#7B2340" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <div className="flex items-center gap-4">
+                {/* Icon container - solid gradient background for visibility */}
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-wine to-maroon flex items-center justify-center shadow-md flex-shrink-0">
+                  <svg className="w-6 h-6 text-offWhite" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                     <polyline points="22,6 12,13 2,6"></polyline>
                     <path d="M12 13 L12 22"></path>
@@ -187,29 +193,46 @@ export default function Vendors() {
                     <circle cx="6" cy="18" r="1" fill="#C9A84C"></circle>
                     <circle cx="18" cy="18" r="1" fill="#C9A84C"></circle>
                   </svg>
-                  <p className="text-xs text-wine/70 uppercase tracking-widest font-semibold">Vendor Management</p>
                 </div>
-                <h1 className="font-display text-3xl sm:text-4xl font-bold bg-gradient-to-r from-wine to-maroon bg-clip-text text-transparent">
-                  Vendor Directory
-                </h1>
-                <p className="text-sm text-textDark/80 mt-2 flex items-center gap-2">
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-sandGold animate-pulse"></span>
-                  System vendors + your own trusted contacts
-                </p>
+                
+                {/* Text content */}
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-wine/70 mb-0.5">
+                    Vendor Management
+                  </p>
+                  <h1 className="font-display text-2xl sm:text-3xl font-bold text-maroon">
+                    Vendor Directory
+                  </h1>
+                </div>
               </div>
 
-              <Button variant="primary" size="md" onClick={() => setShowAdd(true)} className="shadow-sm hover:shadow-md transition-all self-start mt-2">
-                <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+              {/* Add button - styled to match reference */}
+              <Button 
+                variant="primary" 
+                size="md" 
+                onClick={() => setShowAdd(true)} 
+                className="shadow-sm hover:shadow-md transition-all self-start mt-1"
+              >
+                <svg className="w-4 h-4 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
                 </svg>
                 Add My Vendor
               </Button>
             </div>
+            
+            {/* Status message - visible pill below */}
+            <div className="mt-3 flex items-center gap-2">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-sandGold animate-pulse"></span>
+              <p className="text-sm text-textMid">
+                System vendors + your own trusted contacts
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-4 mb-8">
+      {/* Decorative divider */}
+      <div className="flex items-center gap-4 mb-6">
         <div className="flex-1 h-px bg-border" />
         <span className="text-sandGold text-lg">✦</span>
         <div className="flex-1 h-px bg-border" />
