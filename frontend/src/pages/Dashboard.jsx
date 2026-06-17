@@ -282,26 +282,45 @@ export default function Dashboard() {
 
   return (
     <PageWrapper>
-      {/* Greeting Card */}
-      <div className="mb-8">
-        <div className="bg-gradient-to-r from-wine/20 to-caramel/20 rounded-2xl border border-wine/60 p-6 shadow-sm">
-          <div className="flex items-center gap-3 mb-2">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#7B2340" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-            <p className="text-xs text-wine/70 uppercase tracking-widest font-semibold">Welcome back</p>
+      {/* Welcome Banner - Redesigned for visibility */}
+      <div className="mb-4">
+        <div className="relative">
+          {/* Subtle gradient background overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-wine/5 to-transparent rounded-2xl"></div>
+          
+          {/* Main card with visible backdrop */}
+          <div className="relative p-5 rounded-2xl border border-wine/20 bg-offWhite/40 backdrop-blur-sm shadow-sm">
+            <div className="flex items-center gap-4">
+              {/* Icon container - solid gradient background for visibility */}
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-wine to-maroon flex items-center justify-center shadow-md flex-shrink-0">
+                <svg className="w-6 h-6 text-offWhite" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+              
+              {/* Text content */}
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest text-wine/70 mb-0.5">
+                  Welcome back
+                </p>
+                <h1 className="font-display text-2xl sm:text-3xl font-bold text-maroon">
+                  {user?.name || 'Planner'}
+                </h1>
+              </div>
+            </div>
+            
+            {/* Status message - visible pill below */}
+            <div className="mt-3 flex items-center gap-2">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-wine animate-pulse"></span>
+              <p className="text-sm text-textMid">
+                Ready to plan your next celebration?
+              </p>
+            </div>
           </div>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold bg-gradient-to-r from-wine to-maroon bg-clip-text text-transparent">
-            {user?.name || 'Planner'}
-          </h1>
-          <p className="text-sm text-textDark/80 mt-2 flex items-center gap-2">
-            <span className="inline-block w-1.5 h-1.5 rounded-full animate-pulse bg-textDark"></span>
-            Ready to plan your next celebration?
-          </p>
         </div>
       </div>
-
+      
       {events.length === 0 ? (
         <EmptyState />
       ) : (
