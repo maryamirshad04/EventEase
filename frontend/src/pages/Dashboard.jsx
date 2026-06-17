@@ -7,6 +7,7 @@ import { useEvents } from '../hooks/useEvents'
 import { useAuth } from '../context/AuthContext'
 import { formatDate, formatTime, daysUntil } from '../utils/formatDate'
 import { SparklesIcon } from "@heroicons/react/24/solid";
+
 function EmptyState() {
   return (
     <div className="animate-fade-in">
@@ -320,7 +321,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-      
+
       {events.length === 0 ? (
         <EmptyState />
       ) : (
