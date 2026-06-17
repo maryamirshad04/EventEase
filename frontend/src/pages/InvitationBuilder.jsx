@@ -64,14 +64,16 @@ export default function InvitationBuilder() {
   const [showGuestModal, setShowGuestModal] = useState(false)
   const [selectedGuests, setSelectedGuests] = useState([])
   const [selectAll, setSelectAll] = useState(true)
+  
   function formatDateForInput(dateString) {
     if (!dateString) return '';
     const date = new Date(dateString);
     return date.toISOString().split('T')[0];
   }
+  
   const [formData, setFormData] = useState({
     eventName: event?.name || '',
-    date: formatDateForInput(event?.date),  // ← Fixed
+    date: formatDateForInput(event?.date),
     time: event?.time || '',
     location: event?.location || '',
     hostName: '',
@@ -111,25 +113,25 @@ export default function InvitationBuilder() {
     window.print()
   }
 
- function handleSendEmailClick() {
-  if (!event?.guests || event.guests.length === 0) {
-    showWarning('Please add guests to this event first.')
-    return
+  function handleSendEmailClick() {
+    if (!event?.guests || event.guests.length === 0) {
+      showWarning('Please add guests to this event first.')
+      return
+    }
+    setSelectedGuests(event.guests.map(g => String(g._id || g.id)))
+    setSelectAll(true)
+    setShowGuestModal(true)
   }
-  setSelectedGuests(event.guests.map(g => String(g._id || g.id)))
-  setSelectAll(true)
-  setShowGuestModal(true)
-}
 
   function toggleGuest(guestId) {
-  if (!guestId) return
-  const sid = String(guestId)
-  const newSelected = selectedGuests.includes(sid)
-    ? selectedGuests.filter(id => id !== sid)
-    : [...selectedGuests, sid]
-  setSelectedGuests(newSelected)
-  setSelectAll(newSelected.length === event?.guests?.length)
-}
+    if (!guestId) return
+    const sid = String(guestId)
+    const newSelected = selectedGuests.includes(sid)
+      ? selectedGuests.filter(id => id !== sid)
+      : [...selectedGuests, sid]
+    setSelectedGuests(newSelected)
+    setSelectAll(newSelected.length === event?.guests?.length)
+  }
 
   function toggleSelectAll() {
     const allGuestIds = event.guests.map(g => String(g._id || g.id));
@@ -141,6 +143,7 @@ export default function InvitationBuilder() {
       setSelectAll(true);
     }
   }
+  
   async function handleSendEmails() {
     if (selectedGuests.length === 0) {
       showWarning('Please select at least one guest to send invitations to.')
@@ -186,11 +189,6 @@ export default function InvitationBuilder() {
         </div>
       </PageWrapper>
     )
-  }
-
-  const getGuestName = (guestId) => {
-    const guest = event?.guests?.find(g => g.id === guestId)
-    return guest?.name || 'Unknown'
   }
 
   return (
@@ -242,25 +240,44 @@ export default function InvitationBuilder() {
         </div>
       </div>
 
-      {/* Invitation Header Card */}
+      {/* Redesigned Invitation Banner - matching Dashboard style */}
       <div className="mb-8">
-        <div className="bg-gradient-to-r from-wine/20 to-caramel/20 rounded-2xl border border-wine/60 p-6 shadow-sm">
-          <div className="flex items-center gap-3 mb-2">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#7B2340" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-              <polyline points="22,6 12,13 2,6"></polyline>
-              <line x1="12" y1="13" x2="12" y2="22"></line>
-              <line x1="9" y1="18" x2="15" y2="18"></line>
-            </svg>
-            <p className="text-xs text-wine/70 uppercase tracking-widest font-semibold">Create Invitation</p>
+        <div className="relative">
+          {/* Subtle gradient background overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-wine/5 to-transparent rounded-2xl"></div>
+          
+          {/* Main card with visible backdrop */}
+          <div className="relative p-5 rounded-2xl border border-wine/20 bg-offWhite/40 backdrop-blur-sm shadow-sm">
+            <div className="flex items-center gap-4">
+              {/* Icon container - solid gradient background for visibility */}
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-wine to-maroon flex items-center justify-center shadow-md flex-shrink-0">
+                <svg className="w-6 h-6 text-offWhite" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                  <line x1="12" y1="13" x2="12" y2="22"></line>
+                  <line x1="9" y1="18" x2="15" y2="18"></line>
+                </svg>
+              </div>
+              
+              {/* Text content */}
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest text-wine/70 mb-0.5">
+                  Create Invitation
+                </p>
+                <h1 className="font-display text-2xl sm:text-3xl font-bold text-maroon">
+                  Invitation Builder
+                </h1>
+              </div>
+            </div>
+            
+            {/* Status message - visible pill below */}
+            <div className="mt-3 flex items-center gap-2">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-sandGold animate-pulse"></span>
+              <p className="text-sm text-textMid">
+                Choose a template, fill in the details, and download or email your invitation
+              </p>
+            </div>
           </div>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold bg-gradient-to-r from-wine to-maroon bg-clip-text text-transparent">
-            Invitation Builder
-          </h1>
-          <p className="text-sm text-textLight mt-2 flex items-center gap-2">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-sandGold animate-pulse"></span>
-            Choose a template, fill in the details, and download or email your invitation
-          </p>
         </div>
       </div>
 
@@ -484,15 +501,16 @@ export default function InvitationBuilder() {
 
           {/* Guest list with checkboxes */}
           <div className="max-h-64 overflow-y-auto space-y-2">
-            {event?.guests?.map((guest, index) => (
+            {event?.guests?.map((guest) => (
               <label
                 key={guest._id || guest.id}
                 className="flex items-center gap-3 p-2 rounded-lg hover:bg-champagne/30 transition-colors cursor-pointer group"
               >
                 <input
                   type="checkbox"
-                  checked={selectedGuests.includes(guest._id || guest.id)}
+                  checked={selectedGuests.includes(String(guest._id || guest.id))}
                   onChange={() => toggleGuest(guest._id || guest.id)}
+                  className="w-4 h-4 rounded border-border text-wine focus:ring-wine focus:ring-offset-0 cursor-pointer"
                 />
                 <div className="flex-1">
                   <p className="text-sm font-medium text-textDark group-hover:text-maroon transition-colors">
